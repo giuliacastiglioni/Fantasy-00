@@ -325,6 +325,21 @@ GODS = {
             ("Valori", "Ingegno, adattabilità, libertà"),
         ],
     },
+    "Efesto": {
+        "gradiente": "linear-gradient(135deg, #281406 0%, #6e3a12 50%, #c8782e 100%)",
+        "rgb_top": (40, 20, 6),
+        "rgb_bottom": (200, 120, 46),
+        "emoji": "🔨",
+        "descrizione": "Le tue mani parlano più della tua voce. Costruisci, ripari, inventi: la tua genialità pratica è la tua forma più autentica di espressione, anche se pochi la notano subito.",
+        "dettagli": [
+            ("Dominio", "Fabbri, fuoco e creazioni meccaniche"),
+            ("Animale simbolo", "Asino"),
+            ("Colori", "Bronzo e rosso fuoco"),
+            ("Cabina", "Cabina 9"),
+            ("Figli noti", "Leo Valdez, Charles Beckendorf"),
+            ("Valori", "Ingegno pratico, pazienza, perseveranza"),
+        ],
+    },
 }
 
 QUESTIONS_PJ = [
@@ -344,6 +359,7 @@ QUESTIONS_PJ = [
             ("Componendo musica o cantando con gli amici", {"Apollo": 1}),
             ("Passando del tempo di qualità con le persone a cui tengo", {"Afrodite": 1}),
             ("Esplorando in giro, magari architettando qualche scherzo innocuo", {"Ermes": 1}),
+            ("In officina, a costruire o riparare qualcosa con le mie mani", {"Efesto": 1}),
         ],
     },
     {
@@ -362,6 +378,7 @@ QUESTIONS_PJ = [
             ("Risolvere un problema complesso meglio di chiunque altro", {"Atena": 1}),
             ("Una connessione autentica e profonda con qualcuno", {"Afrodite": 1}),
             ("La libertà di andare dove voglio, senza vincoli", {"Ermes": 1}),
+            ("Costruire qualcosa con le mie mani, dall'inizio alla fine", {"Efesto": 1}),
         ],
     },
     {
@@ -380,6 +397,7 @@ QUESTIONS_PJ = [
             ("Analizzo la situazione con lui, punto per punto", {"Atena": 1}),
             ("Cerco di essere di supporto e di rassicurarlo", {"Apollo": 1}),
             ("Gli propongo un'alternativa creativa a cui forse non aveva pensato", {"Ermes": 1}),
+            ("Gli costruisco o aggiusto qualcosa di concreto che possa aiutarlo davvero", {"Efesto": 1}),
         ],
     },
     {
@@ -398,6 +416,7 @@ QUESTIONS_PJ = [
             ("Divento freddo e calcolatore: niente panico, solo azione", {"Ade": 1}),
             ("Cerco prima di tutto di curare o alleviare la sua sofferenza", {"Apollo": 1}),
             ("Il mio cuore va in mille pezzi, ma trovo la forza per lui", {"Afrodite": 1}),
+            ("Costruisco silenziosamente qualcosa che possa proteggerlo davvero", {"Efesto": 1}),
         ],
     },
     {
@@ -416,6 +435,7 @@ QUESTIONS_PJ = [
             ("In palestra, sfogandomi con l'allenamento", {"Ares": 1}),
             ("All'aperto, sotto il sole", {"Apollo": 1}),
             ("In viaggio, ovunque i miei piedi mi portino", {"Ermes": 1}),
+            ("In un'officina, lavorando con le mani mentre penso", {"Efesto": 1}),
         ],
     },
     {
@@ -434,6 +454,189 @@ QUESTIONS_PJ = [
             ("In silenzio, ripassando ogni scenario possibile da solo", {"Ade": 1}),
             ("Continuando ad allenarmi fino all'ultimo minuto", {"Ares": 1}),
             ("Scherzando con gli amici per allentare la tensione", {"Ermes": 1}),
+            ("Controllando e riparando ogni pezzo del mio equipaggiamento", {"Efesto": 1}),
+        ],
+    },
+]
+
+
+# ============================================================
+# DATI — FAZIONI DI DIVERGENT
+# (sede, simbolo, colori, valori, personaggi noti: dettagli
+#  fattuali dell'universo del romanzo, non testo protetto)
+# ============================================================
+DIVERGENT = {
+    "Abneganti": {
+        "gradiente": "linear-gradient(135deg, #3c3c40 0%, #6b6b70 50%, #aaaaad 100%)",
+        "rgb_top": (60, 60, 64),
+        "rgb_bottom": (170, 170, 173),
+        "emoji": "🤲",
+        "descrizione": "Ti dimentichi facilmente di te stesso per mettere gli altri al primo posto. Il servizio silenzioso, per te, vale più di qualsiasi riconoscimento.",
+        "dettagli": [
+            ("Sede", "Quartiere vicino al Recinto"),
+            ("Simbolo", "Mani unite a coppa"),
+            ("Colori", "Grigio"),
+            ("Valori", "Altruismo, umiltà, servizio"),
+            ("Personaggi noti", "Tris Prior (di origine), Andrew e Natalie Prior"),
+        ],
+    },
+    "Eruditi": {
+        "gradiente": "linear-gradient(135deg, #0a1e3c 0%, #1d3f6b 50%, #5b8fd6 100%)",
+        "rgb_top": (10, 30, 60),
+        "rgb_bottom": (91, 143, 214),
+        "emoji": "👁️",
+        "descrizione": "La conoscenza è il tuo faro. Non smetti mai di fare domande, e la verità ti interessa più delle comodità.",
+        "dettagli": [
+            ("Sede", "La grande biblioteca centrale"),
+            ("Simbolo", "Occhio"),
+            ("Colori", "Blu"),
+            ("Valori", "Intelligenza, curiosità, logica"),
+            ("Personaggi noti", "Caleb Prior, Jeanine Matthews"),
+        ],
+    },
+    "Intrepidi": {
+        "gradiente": "linear-gradient(135deg, #100a08 0%, #4a1a0a 50%, #c8641e 100%)",
+        "rgb_top": (16, 10, 8),
+        "rgb_bottom": (200, 100, 30),
+        "emoji": "🔥",
+        "descrizione": "Vivi per il momento in cui la paura si trasforma in azione. Il salto nel vuoto non ti spaventa: è lì che ti senti più vivo.",
+        "dettagli": [
+            ("Sede", "Ex parco divertimenti, vicino ai binari"),
+            ("Simbolo", "Fiamme"),
+            ("Colori", "Nero"),
+            ("Valori", "Coraggio, audacia, adrenalina"),
+            ("Personaggi noti", "Tris Prior (per scelta), Tobias 'Four' Eaton"),
+        ],
+    },
+    "Pacifici": {
+        "gradiente": "linear-gradient(135deg, #4a1608 0%, #8a4a12 50%, #e0c04a 100%)",
+        "rgb_top": (74, 22, 8),
+        "rgb_bottom": (224, 192, 74),
+        "emoji": "🌳",
+        "descrizione": "Cerchi l'armonia ovunque tu vada. Preferisci costruire ponti piuttosto che vincere una battaglia.",
+        "dettagli": [
+            ("Sede", "Frutteti e fattorie fuori città"),
+            ("Simbolo", "Albero"),
+            ("Colori", "Rosso e giallo"),
+            ("Valori", "Pace, gentilezza, armonia"),
+            ("Personaggi noti", "Robert Black"),
+        ],
+    },
+    "Candidi": {
+        "gradiente": "linear-gradient(135deg, #141414 0%, #6a6a6a 50%, #e6e6e6 100%)",
+        "rgb_top": (20, 20, 20),
+        "rgb_bottom": (230, 230, 230),
+        "emoji": "⚖️",
+        "descrizione": "Non sopporti le bugie, nemmeno quelle gentili. Dici quello che pensi, sempre, anche quando fa male.",
+        "dettagli": [
+            ("Sede", "Il tribunale, edificio bianco e nero"),
+            ("Simbolo", "Bilancia"),
+            ("Colori", "Bianco e nero"),
+            ("Valori", "Onestà, schiettezza, verità"),
+            ("Personaggi noti", "Christina"),
+        ],
+    },
+}
+
+QUESTIONS_DIV = [
+    {
+        "domanda": "Il Giorno della Scelta è arrivato e il coltello trema nella tua mano. Cosa pensi in quell'istante?",
+        "opzioni": [
+            ("Penso a chi resterebbe senza il mio aiuto se me ne andassi", {"Abneganti": 1}),
+            ("Penso a quale scelta sia oggettivamente la più razionale per il mio futuro", {"Eruditi": 1}),
+            ("Penso solo al salto che sto per fare, senza guardarmi indietro", {"Intrepidi": 1}),
+            ("Penso a restare in pace con tutti, qualunque cosa scelga", {"Pacifici": 1}),
+            ("Penso che dovrei semplicemente dire ad alta voce cosa provo davvero", {"Candidi": 1}),
+        ],
+    },
+    {
+        "domanda": "Durante l'addestramento, un compagno ti sfida apertamente davanti al gruppo. Come reagisci?",
+        "opzioni": [
+            ("Cerco di calmare la situazione, mettendo da parte il mio orgoglio", {"Abneganti": 1}),
+            ("Rispondo con un argomento logico che smonta la sua provocazione", {"Eruditi": 1}),
+            ("Accetto la sfida subito, qualunque essa sia", {"Intrepidi": 1}),
+            ("Provo a capire cosa lo turba davvero, oltre la sfida", {"Pacifici": 1}),
+            ("Gli dico chiaramente cosa penso di lui, senza girarci intorno", {"Candidi": 1}),
+        ],
+    },
+    {
+        "domanda": "Scopri un segreto scomodo su qualcuno che rispetti. Cosa fai?",
+        "opzioni": [
+            ("Lo tengo per me, se rivelarlo farebbe più male che bene", {"Abneganti": 1}),
+            ("Verifico i fatti con cura prima di trarre conclusioni", {"Eruditi": 1}),
+            ("Lo affronto di petto, subito, senza troppi giri di parole", {"Intrepidi": 1}),
+            ("Aspetto il momento giusto per parlarne con gentilezza", {"Pacifici": 1}),
+            ("Non riesco a tenermelo dentro: la verità va detta", {"Candidi": 1}),
+        ],
+    },
+    {
+        "domanda": "Cosa temi di più, in fondo?",
+        "opzioni": [
+            ("Diventare egoista e dimenticarmi degli altri", {"Abneganti": 1}),
+            ("Restare ignorante o commettere un errore per superficialità", {"Eruditi": 1}),
+            ("Essere paralizzato dalla paura nel momento decisivo", {"Intrepidi": 1}),
+            ("Il conflitto costante e la perdita dell'armonia", {"Pacifici": 1}),
+            ("Essere costretto a mentire o nascondere chi sono davvero", {"Candidi": 1}),
+        ],
+    },
+    {
+        "domanda": "Il tuo posto ideale nella società sarebbe...",
+        "opzioni": [
+            ("Un ruolo di servizio silenzioso, senza bisogno di riconoscimenti", {"Abneganti": 1}),
+            ("Un laboratorio o una biblioteca dove poter studiare senza limiti", {"Eruditi": 1}),
+            ("In prima linea, a proteggere gli altri con azioni concrete", {"Intrepidi": 1}),
+            ("Un luogo che favorisca la pace e la collaborazione tra tutti", {"Pacifici": 1}),
+            ("Un posto dove la verità venga sempre a galla, senza eccezioni", {"Candidi": 1}),
+        ],
+    },
+    {
+        "domanda": "Un amico ti chiede un parere sincero su una sua scelta importante. Come rispondi?",
+        "opzioni": [
+            ("Penso soprattutto a come la mia risposta influirà su di lui", {"Abneganti": 1}),
+            ("Gli offro un'analisi oggettiva dei pro e dei contro", {"Eruditi": 1}),
+            ("Lo incoraggio a buttarsi, qualunque sia il rischio", {"Intrepidi": 1}),
+            ("Cerco la risposta più delicata, che non ferisca nessuno", {"Pacifici": 1}),
+            ("Gli dico esattamente quello che penso, anche se è scomodo", {"Candidi": 1}),
+        ],
+    },
+    {
+        "domanda": "Cosa ti fa sentire più forte?",
+        "opzioni": [
+            ("Sapere di aver aiutato qualcuno senza chiedere nulla in cambio", {"Abneganti": 1}),
+            ("Aver capito qualcosa che nessun altro aveva colto", {"Eruditi": 1}),
+            ("Aver superato una paura che mi bloccava da tempo", {"Intrepidi": 1}),
+            ("Aver riportato la calma in una situazione tesa", {"Pacifici": 1}),
+            ("Aver detto la verità anche quando era difficile farlo", {"Candidi": 1}),
+        ],
+    },
+    {
+        "domanda": "Come reagisci di fronte a un'ingiustizia?",
+        "opzioni": [
+            ("Cerco di risolverla aiutando concretamente chi ne soffre", {"Abneganti": 1}),
+            ("Cerco prove e argomenti solidi per dimostrarla", {"Eruditi": 1}),
+            ("Reagisco d'istinto, subito, senza troppi calcoli", {"Intrepidi": 1}),
+            ("Provo a mediare, cercando un accordo che vada bene a tutti", {"Pacifici": 1}),
+            ("La denuncio apertamente, senza paura delle conseguenze", {"Candidi": 1}),
+        ],
+    },
+    {
+        "domanda": "Se dovessi scegliere un solo valore da portare avanti per sempre, quale sarebbe?",
+        "opzioni": [
+            ("L'altruismo", {"Abneganti": 1}),
+            ("La conoscenza", {"Eruditi": 1}),
+            ("Il coraggio", {"Intrepidi": 1}),
+            ("La pace", {"Pacifici": 1}),
+            ("L'onestà", {"Candidi": 1}),
+        ],
+    },
+    {
+        "domanda": "È l'ultima notte prima di una prova decisiva. Come la passi?",
+        "opzioni": [
+            ("Penso a come posso essere utile agli altri il giorno dopo", {"Abneganti": 1}),
+            ("Ripasso ogni singolo dettaglio che potrebbe servirmi", {"Eruditi": 1}),
+            ("Non riesco a stare fermo, voglio solo che arrivi il momento", {"Intrepidi": 1}),
+            ("Sto con le persone care, per affrontare tutto con serenità", {"Pacifici": 1}),
+            ("Mi confronto apertamente con me stesso su cosa provo davvero", {"Candidi": 1}),
         ],
     },
 ]
@@ -446,7 +649,7 @@ QUESTIONS_PJ = [
 st.markdown(
     textwrap.dedent("""\
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cinzel+Decorative:wght@700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IM+Fell+English:ital@0;1&family=Lora:ital,wght@0,500;1,500&family=IBM+Plex+Mono:wght@500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cinzel+Decorative:wght@700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IM+Fell+English:ital@0;1&family=Lora:ital,wght@0,500;1,500&family=IBM+Plex+Mono:wght@500&family=Barlow+Condensed:wght@600;700&family=Barlow:ital,wght@0,400;1,400&family=Philosopher:wght@700&display=swap');
 
     html, body, [class*="css"] { font-family: 'EB Garamond', serif; }
 
@@ -568,6 +771,101 @@ st.markdown(
         margin-top: -8px;
         margin-bottom: 1.2rem;
         letter-spacing: 0.3px;
+    }
+
+    .steel-title {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 700;
+        font-size: 2.8rem;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        color: #d8dde2;
+        text-shadow: 0 0 20px rgba(120,140,160,0.35);
+        margin-bottom: 0;
+    }
+    .steel-subtitle {
+        font-family: 'Barlow', sans-serif;
+        font-style: italic;
+        text-align: center;
+        color: #8a95a0;
+        font-size: 1rem;
+        margin-top: -6px;
+        margin-bottom: 1.4rem;
+        letter-spacing: 0.5px;
+    }
+    .steel {
+        background:
+            repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 14px),
+            linear-gradient(135deg, #2b3238 0%, #3a434b 50%, #4a555e 100%);
+        border: 1px solid #6b7680;
+        outline: 6px solid #0d1114;
+        outline-offset: -12px;
+        border-radius: 2px;
+        padding: 2rem 2.2rem;
+        box-shadow: 0 15px 45px rgba(0,0,0,0.6), inset 0 0 40px rgba(0,0,0,0.35);
+        color: #e4e8eb;
+        margin-bottom: 1.4rem;
+    }
+    .steel h3 {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 700;
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #e4e8eb;
+        border-bottom: 1px solid #6b7680;
+        padding-bottom: 8px;
+        margin-top: 0;
+    }
+    .qcounter.steel {
+        font-family: 'IBM Plex Mono', monospace;
+        font-style: normal;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        color: #8a95a0;
+    }
+    .result-house.steel {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-size: 2.2rem;
+    }
+    .result-desc.steel {
+        font-family: 'Barlow', sans-serif;
+        font-style: italic;
+    }
+    .fact-label.steel {
+        font-family: 'IBM Plex Mono', monospace;
+        font-style: normal;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+    }
+
+    .nexus-title {
+        font-family: 'Philosopher', sans-serif;
+        font-weight: 700;
+        font-size: 2.7rem;
+        text-align: center;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, #f3d98b 0%, #7fc7d9 50%, #e08a3c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 30px rgba(255,255,255,0.15);
+        margin-bottom: 0;
+    }
+    .nexus-subtitle {
+        font-family: 'IBM Plex Mono', monospace;
+        text-align: center;
+        color: #b8b6c9;
+        font-size: 0.85rem;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-top: -4px;
+        margin-bottom: 0.6rem;
     }
 
     div.stButton > button {
@@ -838,6 +1136,110 @@ def render_camp_banner():
     st.markdown(svg_code, unsafe_allow_html=True)
 
 
+def render_steel_background():
+    st.markdown(
+        textwrap.dedent("""\
+        <style>
+        .stApp {
+            background:
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px),
+                radial-gradient(ellipse at top left, rgba(90,110,130,0.25), transparent 55%),
+                radial-gradient(ellipse at bottom right, rgba(40,50,60,0.4), transparent 60%),
+                linear-gradient(180deg, #0d1114 0%, #171c20 45%, #0d1114 100%) !important;
+            background-attachment: fixed !important;
+        }
+        </style>
+        """),
+        unsafe_allow_html=True,
+    )
+
+
+def render_nexus_background():
+    st.markdown(
+        textwrap.dedent("""\
+        <style>
+        .stApp {
+            background:
+                radial-gradient(circle at 18% 22%, rgba(243,217,139,0.14), transparent 38%),
+                radial-gradient(circle at 82% 28%, rgba(63,151,173,0.18), transparent 38%),
+                radial-gradient(circle at 50% 85%, rgba(224,138,60,0.14), transparent 42%),
+                radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1.5px) 0 0/160px 160px,
+                radial-gradient(circle, rgba(255,255,255,0.55) 1px, transparent 1.5px) 55px 70px/190px 190px,
+                radial-gradient(circle, rgba(255,255,255,0.4) 1px, transparent 1.5px) 100px 30px/220px 220px,
+                linear-gradient(180deg, #05060f 0%, #0b0a1a 50%, #05060f 100%) !important;
+            background-attachment: fixed !important;
+        }
+        </style>
+        """),
+        unsafe_allow_html=True,
+    )
+
+
+def render_nexus_emblem():
+    svg_code = textwrap.dedent("""\
+    <div style="display:flex; justify-content:center; margin: 0.2rem 0 1.6rem;">
+    <svg width="210" height="170" viewBox="0 0 210 170" xmlns="http://www.w3.org/2000/svg">
+    <g style="animation: nexus-rotate 34s linear infinite; transform-origin: 105px 92px;" opacity="0.5">
+    <circle cx="105" cy="14" r="2" fill="#ffffff"/>
+    <circle cx="197" cy="92" r="2" fill="#ffffff"/>
+    <circle cx="105" cy="170" r="2" fill="#ffffff"/>
+    <circle cx="13" cy="92" r="2" fill="#ffffff"/>
+    </g>
+    <g style="mix-blend-mode: screen;">
+    <circle cx="72" cy="100" r="52" fill="#f3d98b" opacity="0.45"/>
+    <circle cx="138" cy="100" r="52" fill="#3f97ad" opacity="0.45"/>
+    <circle cx="105" cy="55" r="52" fill="#e08a3c" opacity="0.45"/>
+    </g>
+    <circle cx="72" cy="100" r="52" fill="none" stroke="#f3d98b" stroke-width="1.2" opacity="0.7"/>
+    <circle cx="138" cy="100" r="52" fill="none" stroke="#7fc7d9" stroke-width="1.2" opacity="0.7"/>
+    <circle cx="105" cy="55" r="52" fill="none" stroke="#e08a3c" stroke-width="1.2" opacity="0.7"/>
+    <circle cx="105" cy="88" r="9" fill="#ffffff" opacity="0.9">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    </svg>
+    </div>
+    <style>
+    @keyframes nexus-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+    """)
+    st.markdown(svg_code, unsafe_allow_html=True)
+
+
+def render_faction_wheel():
+    svg_code = textwrap.dedent("""\
+    <div style="display:flex; justify-content:center; margin: 0.4rem 0 1.6rem;">
+    <svg width="190" height="190" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+    <radialGradient id="glow3" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#d8dde2" stop-opacity="0.85"/>
+    <stop offset="100%" stop-color="#d8dde2" stop-opacity="0"/>
+    </radialGradient>
+    </defs>
+    <g stroke="#0d1114" stroke-width="2">
+    <path d="M100,100 L100,10 L185.6,72.2 Z" fill="#6b6b70"/>
+    <path d="M100,100 L185.6,72.2 L152.9,172.8 Z" fill="#1d3f6b"/>
+    <path d="M100,100 L152.9,172.8 L47.1,172.8 Z" fill="#201010"/>
+    <path d="M100,100 L47.1,172.8 L14.4,72.2 Z" fill="#8a4a12"/>
+    <path d="M100,100 L14.4,72.2 L100,10 Z" fill="#3a3a3a"/>
+    </g>
+    <circle cx="65" cy="55" r="6" fill="none" stroke="#d8dde2" stroke-width="2" opacity="0.8"/>
+    <ellipse cx="150" cy="105" rx="9" ry="5" fill="none" stroke="#9fc2ea" stroke-width="2" opacity="0.85"/>
+    <circle cx="150" cy="105" r="2" fill="#9fc2ea"/>
+    <path d="M92,155 q8,-16 0,-28 q10,4 8,18 q6,-6 4,4 q-6,4 -12,6 Z" fill="#e0995c" opacity="0.85"/>
+    <path d="M35,140 q0,-16 12,-20 q4,10 -4,18 q8,-2 2,8 q-6,2 -10,-6 Z" fill="#e0c04a" opacity="0.85"/>
+    <line x1="45" y1="60" x2="65" y2="60" stroke="#d8dde2" stroke-width="2" opacity="0.85"/>
+    <line x1="55" y1="60" x2="55" y2="45" stroke="#d8dde2" stroke-width="2" opacity="0.85"/>
+    <circle cx="100" cy="100" r="32" fill="url(#glow3)">
+    <animate attributeName="r" values="28;34;28" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="100" cy="100" r="24" fill="#0d1114" stroke="#d8dde2" stroke-width="2"/>
+    <path d="M100,86 L110,100 L100,114 L90,100 Z" fill="none" stroke="#d8dde2" stroke-width="2"/>
+    </svg>
+    </div>
+    """)
+    st.markdown(svg_code, unsafe_allow_html=True)
+
+
 # ============================================================
 # EFFETTO MACCHINA DA SCRIVERE per il testo della domanda
 # (due varianti estetiche: pergamena e marmo)
@@ -858,7 +1260,7 @@ def render_typewriter_question(testo, stile="pergamena"):
         font_family = "'Cinzel Decorative', serif"
         text_transform = "none"
         letter_spacing = "normal"
-    else:
+    elif stile == "marmo":
         box_bg = """
             radial-gradient(circle at 20% 25%, rgba(150,160,170,0.35), transparent 45%),
             radial-gradient(circle at 80% 75%, rgba(120,130,145,0.3), transparent 45%),
@@ -869,6 +1271,16 @@ def render_typewriter_question(testo, stile="pergamena"):
         font_family = "'Cinzel', serif"
         text_transform = "uppercase"
         letter_spacing = "0.5px"
+    else:
+        box_bg = """
+            repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 14px),
+            linear-gradient(135deg, #2b3238 0%, #3a434b 50%, #4a555e 100%)"""
+        border_color = "#6b7680"
+        text_color = "#e4e8eb"
+        font_import = "Barlow+Condensed:wght@700"
+        font_family = "'Barlow Condensed', sans-serif"
+        text_transform = "uppercase"
+        letter_spacing = "1px"
 
     html_code = f"""
     <html>
@@ -938,6 +1350,7 @@ def carica_font():
     sorgenti = {
         "titolo_hp": "https://github.com/google/fonts/raw/main/ofl/cinzeldecorative/CinzelDecorative-Bold.ttf",
         "titolo_pj": "https://github.com/google/fonts/raw/main/ofl/cinzel/Cinzel[wght].ttf",
+        "titolo_div": "https://github.com/google/fonts/raw/main/ofl/barlowcondensed/BarlowCondensed-Bold.ttf",
         "corpo": "https://github.com/google/fonts/raw/main/ofl/ebgaramond/EBGaramond-Regular.ttf",
         "corsivo": "https://github.com/google/fonts/raw/main/ofl/ebgaramond/EBGaramond-Italic.ttf",
     }
@@ -1319,16 +1732,137 @@ def render_percy():
 
 
 # ============================================================
-# MENU INIZIALE
+# QUIZ 3 — A QUALE FAZIONE APPARTIENI?
 # ============================================================
-def render_menu():
-    st.markdown('<div class="hat-title">Fantasy Quiz</div>', unsafe_allow_html=True)
+def render_divergent():
+    prefix = "div"
+    init_state(prefix, DIVERGENT)
+    if f"{prefix}_ordine" not in st.session_state:
+        st.session_state[f"{prefix}_ordine"] = list(range(len(QUESTIONS_DIV)))
+        random.shuffle(st.session_state[f"{prefix}_ordine"])
+
+    if st.button("← Torna al menu"):
+        st.session_state.pagina = "menu"
+        st.rerun()
+
+    render_steel_background()
+
+    st.markdown('<div class="steel-title">A quale fazione appartieni?</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="subtitle">Scegli quale mondo vuoi lasciare che ti smisti</div>',
+        '<div class="steel-subtitle">"Fazione prima del sangue. Ma chi sei, davvero, quando nessuno ti guarda?"</div>',
         unsafe_allow_html=True,
     )
 
-    col1, col2 = st.columns(2)
+    if not st.session_state[f"{prefix}_iniziato"]:
+        render_faction_wheel()
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="steel">
+            <h3>Prima della Cerimonia della Scelta</h3>
+            Rispondi con sincerità a 10 situazioni ispirate alla società delle
+            cinque fazioni. Non esistono risposte giuste o sbagliate: la vera
+            natura viene sempre a galla. Alla fine scoprirai a quale fazione
+            apparterresti, con il tuo profilo completo — e potrai scaricare
+            la tua card da condividere.
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("🗡️ Affronta la Cerimonia", use_container_width=True):
+            st.session_state[f"{prefix}_iniziato"] = True
+            st.rerun()
+
+    elif not st.session_state[f"{prefix}_finito"]:
+        idx = st.session_state[f"{prefix}_ordine"][st.session_state[f"{prefix}_domanda"]]
+        domanda = QUESTIONS_DIV[idx]
+
+        st.markdown(
+            f'<div class="qcounter steel">Domanda {st.session_state[f"{prefix}_domanda"] + 1} di {len(QUESTIONS_DIV)}</div>',
+            unsafe_allow_html=True,
+        )
+        st.progress(st.session_state[f"{prefix}_domanda"] / len(QUESTIONS_DIV))
+        render_typewriter_question(domanda["domanda"], stile="acciaio")
+
+        opzioni = list(domanda["opzioni"])
+        random.Random(idx + 300).shuffle(opzioni)
+        for testo_opzione, punti in opzioni:
+            if st.button(testo_opzione, key=f"{prefix}_{idx}_{testo_opzione}"):
+                rispondi(prefix, QUESTIONS_DIV, punti)
+                st.rerun()
+
+    else:
+        punteggi = st.session_state[f"{prefix}_punteggi"]
+        vincitore = max(punteggi, key=punteggi.get)
+        info = DIVERGENT[vincitore]
+
+        st.balloons()
+
+        dettagli_html = "".join(
+            f'<div class="fact-item"><span class="fact-label steel">{label}</span><span class="fact-value">{valore}</span></div>'
+            for label, valore in info["dettagli"]
+        )
+
+        st.markdown(
+            textwrap.dedent(f"""\
+            <div class="result-card" style="background:{info['gradiente']};">
+            <div style="font-size:3.2rem;">{info['emoji']}</div>
+            <div class="result-house steel">{vincitore}</div>
+            <div class="result-desc steel">{info['descrizione']}</div>
+            <div class="fact-grid">{dettagli_html}</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+
+        st.write("")
+        with st.spinner("Sto preparando la tua card da condividere..."):
+            buf = genera_immagine_condivisione(
+                vincitore, info,
+                "LA CERIMONIA DELLA SCELTA MI HA RIVELATO",
+                "A QUALE FAZIONE APPARTIENI?",
+                titolo_font_key="titolo_div",
+            )
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.image(buf, use_container_width=True)
+        with col2:
+            st.write("")
+            st.write("Scarica la tua card e condividila dove vuoi.")
+            st.download_button(
+                "📥 Scarica la card", data=buf,
+                file_name=f"fazione_{vincitore.lower()}.png",
+                mime="image/png", use_container_width=True,
+            )
+
+        st.write("")
+        st.markdown('<div class="steel"><h3>Il tuo profilo tra le fazioni</h3></div>', unsafe_allow_html=True)
+        fazioni = list(DIVERGENT.keys())
+        render_radar(fazioni, [punteggi[f] for f in fazioni])
+
+        for fazione, punti in sorted(punteggi.items(), key=lambda x: -x[1]):
+            pct = punti / len(QUESTIONS_DIV)
+            st.write(f"{DIVERGENT[fazione]['emoji']} **{fazione}** — {punti:g} punti")
+            st.progress(min(pct, 1.0))
+
+        st.write("")
+        if st.button("🔄 Rifai la Cerimonia", use_container_width=True):
+            reset_quiz(prefix, DIVERGENT, QUESTIONS_DIV)
+            st.rerun()
+
+
+# ============================================================
+# MENU INIZIALE
+# ============================================================
+def render_menu():
+    render_nexus_background()
+    st.markdown('<div class="nexus-title">FANTASY QUIZ</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="nexus-subtitle">Scegli quale realtà vuoi esplorare</div>',
+        unsafe_allow_html=True,
+    )
+    render_nexus_emblem()
+
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         st.markdown(
@@ -1360,6 +1894,21 @@ def render_menu():
             st.session_state.pagina = "percy"
             st.rerun()
 
+    with col3:
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="menu-card" style="background:linear-gradient(160deg, #2b3238 0%, #1a1f22 100%);">
+            <div class="menu-card-icon">⚖️</div>
+            <div class="menu-card-title" style="font-family:'Barlow Condensed',sans-serif; letter-spacing:2px; text-transform:uppercase;">A quale fazione appartieni?</div>
+            <div class="menu-card-desc">Scopri quale fazione rispecchia davvero la tua natura</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("Affronta la Scelta", key="entra_div", use_container_width=True):
+            st.session_state.pagina = "divergent"
+            st.rerun()
+
 
 # ============================================================
 # NAVIGAZIONE PRINCIPALE
@@ -1373,3 +1922,5 @@ elif st.session_state.pagina == "hogwarts":
     render_hogwarts()
 elif st.session_state.pagina == "percy":
     render_percy()
+elif st.session_state.pagina == "divergent":
+    render_divergent()
