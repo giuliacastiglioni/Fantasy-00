@@ -2895,25 +2895,109 @@ def render_survival():
 # ============================================================
 # STRUMENTO 3 — MAPPE INTERATTIVE
 # ============================================================
-def render_map_svg(luoghi, stile_card):
+TERRENI_MAPPA = {
+    "hogwarts": """
+        <path d="M0,340 Q100,322 200,335 T400,330 T600,338 T800,325 L800,400 L0,400 Z" fill="currentColor" opacity="0.08"/>
+        <ellipse cx="150" cy="335" rx="95" ry="34" fill="currentColor" opacity="0.1"/>
+        <ellipse cx="150" cy="335" rx="95" ry="34" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.45"/>
+        <g opacity="0.55" stroke="currentColor" stroke-width="1.5" fill="none">
+            <rect x="330" y="95" width="30" height="70"/>
+            <path d="M330,95 L345,63 L360,95 Z"/>
+            <rect x="366" y="72" width="34" height="93"/>
+            <path d="M366,72 L383,35 L400,72 Z"/>
+            <rect x="405" y="105" width="26" height="60"/>
+            <path d="M405,105 L418,76 L431,105 Z"/>
+            <rect x="292" y="118" width="26" height="47"/>
+            <path d="M292,118 L305,92 L318,118 Z"/>
+        </g>
+        <g opacity="0.5" fill="currentColor">
+            <path d="M600,262 L615,225 L630,262 Z"/>
+            <path d="M624,272 L639,230 L654,272 Z"/>
+            <path d="M648,255 L663,218 L678,255 Z"/>
+            <path d="M668,278 L683,236 L698,278 Z"/>
+        </g>
+        <ellipse cx="235" cy="235" rx="58" ry="26" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4" stroke-dasharray="5,5"/>
+    """,
+    "percy": """
+        <path d="M0,300 Q100,286 200,300 T400,296 T600,306 T800,296 L800,400 L0,400 Z" fill="currentColor" opacity="0.1"/>
+        <path d="M0,300 Q100,286 200,300 T400,296 T600,306 T800,296" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+        <g opacity="0.55" stroke="currentColor" stroke-width="1.5" fill="none">
+            <rect x="362" y="112" width="88" height="52"/>
+            <path d="M357,112 L406,78 L455,112 Z"/>
+            <line x1="382" y1="164" x2="382" y2="132"/>
+            <line x1="430" y1="164" x2="430" y2="132"/>
+        </g>
+        <g opacity="0.5" stroke="currentColor" stroke-width="1.3" fill="none">
+            <path d="M150,222 L150,252 L184,252 L184,222 L167,202 Z"/>
+            <path d="M196,227 L196,255 L226,255 L226,227 L211,207 Z"/>
+            <path d="M242,217 L242,247 L272,247 L272,217 L257,197 Z"/>
+        </g>
+        <g opacity="0.5" fill="currentColor">
+            <path d="M580,192 L595,152 L610,192 Z"/>
+            <path d="M605,202 L620,158 L635,202 Z"/>
+            <path d="M630,187 L645,148 L660,187 Z"/>
+        </g>
+        <circle cx="180" cy="150" r="30" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4" stroke-dasharray="5,5"/>
+    """,
+    "divergent": """
+        <line x1="0" y1="360" x2="800" y2="360" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+        <g opacity="0.5" fill="currentColor">
+            <rect x="80" y="240" width="34" height="120"/>
+            <rect x="120" y="200" width="28" height="160"/>
+            <rect x="155" y="260" width="40" height="100"/>
+            <rect x="400" y="180" width="30" height="180"/>
+            <rect x="435" y="230" width="26" height="130"/>
+            <rect x="560" y="210" width="36" height="150"/>
+            <rect x="600" y="250" width="24" height="110"/>
+            <rect x="640" y="190" width="30" height="170"/>
+        </g>
+        <line x1="0" y1="120" x2="800" y2="150" stroke="currentColor" stroke-width="2" opacity="0.45"/>
+        <g stroke="currentColor" stroke-width="1" opacity="0.35">
+            <line x1="50" y1="119" x2="50" y2="135"/>
+            <line x1="200" y1="126" x2="200" y2="142"/>
+            <line x1="350" y1="132" x2="350" y2="148"/>
+            <line x1="500" y1="139" x2="500" y2="155"/>
+            <line x1="650" y1="145" x2="650" y2="161"/>
+        </g>
+        <rect x="20" y="60" width="760" height="300" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="8,6" opacity="0.3"/>
+    """,
+    "hunger": """
+        <path d="M60,220 Q40,140 140,110 Q260,60 400,90 Q560,60 680,130 Q760,180 720,270 Q660,340 500,330 Q380,360 260,330 Q120,320 60,220 Z" fill="currentColor" opacity="0.08" stroke="currentColor" stroke-width="1.5"/>
+        <g opacity="0.5" fill="currentColor">
+            <path d="M160,222 L185,172 L210,222 Z"/>
+            <path d="M195,227 L220,167 L245,227 Z"/>
+            <path d="M230,222 L255,177 L280,222 Z"/>
+        </g>
+        <g opacity="0.55" stroke="currentColor" stroke-width="1.5" fill="none">
+            <rect x="385" y="122" width="30" height="78"/>
+            <path d="M385,122 L400,97 L415,122 Z"/>
+            <line x1="400" y1="97" x2="400" y2="82"/>
+            <circle cx="400" cy="78" r="3" fill="currentColor" stroke="none"/>
+        </g>
+        <g opacity="0.5" stroke="currentColor" stroke-width="1.3" fill="none">
+            <rect x="590" y="240" width="60" height="35"/>
+            <rect x="600" y="215" width="10" height="25"/>
+            <rect x="620" y="205" width="10" height="35"/>
+        </g>
+    """,
+}
+
+
+def render_map_illustration(mondo, luoghi, stile_card):
+    terreno = TERRENI_MAPPA.get(mondo, "")
     marcatori = "".join(
-        f'<a href="?loc={l["slug"]}">'
-        f'<circle cx="{l["x"]}" cy="{l["y"]}" r="14" fill="#8a1f1f" stroke="#f3d98b" stroke-width="2"/>'
-        f'<circle cx="{l["x"]}" cy="{l["y"]}" r="5" fill="#f3d98b"/>'
-        f'<text x="{l["x"]}" y="{l["y"] - 20}" font-size="15" font-weight="700" '
-        f'fill="currentColor" text-anchor="middle">{l["nome"]}</text>'
-        f'</a>'
-        for l in luoghi
-    )
-    linee = "".join(
-        f'<line x1="{luoghi[i]["x"]}" y1="{luoghi[i]["y"]}" x2="{luoghi[i + 1]["x"]}" y2="{luoghi[i + 1]["y"]}" '
-        f'stroke="currentColor" stroke-width="1.5" stroke-dasharray="6,6" opacity="0.4"/>'
-        for i in range(len(luoghi) - 1)
+        f'<g>'
+        f'<circle cx="{l["x"]}" cy="{l["y"]}" r="15" fill="currentColor" opacity="0.16"/>'
+        f'<circle cx="{l["x"]}" cy="{l["y"]}" r="11" fill="none" stroke="currentColor" stroke-width="2"/>'
+        f'<text x="{l["x"]}" y="{l["y"] + 5}" font-size="13" font-weight="700" '
+        f'fill="currentColor" text-anchor="middle">{i + 1}</text>'
+        f'</g>'
+        for i, l in enumerate(luoghi)
     )
     svg = textwrap.dedent(f"""\
     <div class="{stile_card}" style="padding:1rem;">
     <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
-    {linee}
+    {terreno}
     {marcatori}
     </svg>
     </div>
@@ -2925,10 +3009,6 @@ def render_mappe():
     if st.button("← Torna al menu"):
         st.session_state.pagina = "menu"
         st.session_state.pop("mappa_mondo", None)
-        try:
-            st.query_params.clear()
-        except Exception:
-            pass
         st.rerun()
 
     st.markdown('<div class="nexus-title" style="font-size:2.2rem;">🗺️ Mappe Interattive</div>', unsafe_allow_html=True)
@@ -2943,28 +3023,29 @@ def render_mappe():
     st.markdown(f'<div class="{dati["font_titolo_css"]}" style="font-size:2rem;">{dati["titolo"]}</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="subtitle">{dati["eyebrow"]}</div>', unsafe_allow_html=True)
 
-    render_map_svg(dati["luoghi"], dati["stile_card"])
+    render_map_illustration(mondo, dati["luoghi"], dati["stile_card"])
 
-    try:
-        loc = st.query_params.get("loc")
-    except Exception:
-        loc = None
+    loc_key = f"mappa_loc_{mondo}"
+    if loc_key not in st.session_state:
+        st.session_state[loc_key] = 0
 
-    luogo_trovato = next((l for l in dati["luoghi"] if l["slug"] == loc), None)
-    if luogo_trovato:
-        st.markdown(
-            f'<div class="{dati["stile_card"]}"><h3>{luogo_trovato["nome"]}</h3>{luogo_trovato["desc"]}</div>',
-            unsafe_allow_html=True,
-        )
-    else:
-        st.info("Clicca su un punto della mappa per scoprire cosa nasconde quel luogo.")
+    etichette = [f"{i + 1}. {l['nome']}" for i, l in enumerate(dati["luoghi"])]
+    idx_scelto = st.selectbox(
+        "Scegli un luogo numerato sulla mappa per scoprirlo",
+        options=list(range(len(dati["luoghi"]))),
+        format_func=lambda i: etichette[i],
+        key=f"select_{loc_key}",
+    )
+    luogo_trovato = dati["luoghi"][idx_scelto]
 
+    st.markdown(
+        f'<div class="{dati["stile_card"]}"><h3>{luogo_trovato["nome"]}</h3>{luogo_trovato["desc"]}</div>',
+        unsafe_allow_html=True,
+    )
+
+    st.write("")
     if st.button("🔄 Cambia mondo", use_container_width=True):
         st.session_state.pop("mappa_mondo", None)
-        try:
-            st.query_params.clear()
-        except Exception:
-            pass
         st.rerun()
 
 
