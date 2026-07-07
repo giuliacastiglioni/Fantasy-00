@@ -3,6 +3,8 @@ import streamlit.components.v1 as components
 import random
 import json
 import io
+import re
+import html
 import textwrap
 import requests
 import plotly.graph_objects as go
@@ -886,6 +888,213 @@ QUESTIONS_HG = [
         ],
     },
 ]
+
+
+# ============================================================
+# DATI — CREATORE DI PERSONAGGIO (elementi originali per ogni
+# mondo: tratti, oggetti, alleati; l'affiliazione finale viene
+# scelta tra le entità già definite sopra per ciascun mondo)
+# ============================================================
+CREATOR_DATA = {
+    "hogwarts": {
+        "titolo": "Crea il tuo Mago",
+        "eyebrow": "IL MINISTERO DELLA MAGIA REGISTRA UN NUOVO STREGONE",
+        "tratti": ["Coraggioso", "Astuto", "Leale", "Curioso", "Ambizioso", "Gentile", "Ribelle", "Studioso"],
+        "oggetti": ["Una bacchetta di legno di sorbo", "Un mantello dell'invisibilità di famiglia",
+                    "Un giratempo dimenticato in soffitta", "Uno specchio che rivela le emozioni",
+                    "Una scopa da corsa arrugginita ma veloce", "Un calderone che ribolle da solo"],
+        "alleati": ["Un gufo messaggero fedele", "Un gatto dagli occhi dorati", "Un piccolo drago addomesticato",
+                    "Un elfo domestico devoto", "Una fenice compagna", "Un ippogrifo leale"],
+        "entita": HOUSES,
+        "gradiente_default": "linear-gradient(135deg, #1c140b 0%, #4a2f0e 50%, #8a6a12 100%)",
+        "rgb_top": (28, 20, 11),
+        "rgb_bottom": (138, 106, 18),
+        "font_titolo": "titolo_hp",
+    },
+    "percy": {
+        "titolo": "Crea il tuo Semidio",
+        "eyebrow": "IL CAMPO MEZZOSANGUE ACCOGLIE UN NUOVO CAMPISTA",
+        "tratti": ["Coraggioso", "Leale", "Astuto", "Impulsivo", "Protettivo", "Curioso", "Ironico", "Determinato"],
+        "oggetti": ["Una spada di bronzo celeste", "Uno scudo inciso con simboli antichi",
+                    "Un arco che non manca mai il bersaglio", "Un pugnale forgiato nell'ombra",
+                    "Un amuleto di protezione", "Un paio di sandali alati"],
+        "alleati": ["Un satiro esploratore", "Una ninfa dei boschi", "Un cane infernale addomesticato",
+                    "Un pegaso fedele", "Uno spirito guida silenzioso", "Un compagno semidio inseparabile"],
+        "entita": GODS,
+        "gradiente_default": "linear-gradient(135deg, #060d24 0%, #0e1a40 50%, #2b4a8c 100%)",
+        "rgb_top": (6, 13, 36),
+        "rgb_bottom": (43, 74, 140),
+        "font_titolo": "titolo_pj",
+    },
+    "divergent": {
+        "titolo": "Crea il tuo Iniziato",
+        "eyebrow": "LA CERIMONIA DELLA SCELTA ACCOGLIE UN NUOVO INIZIATO",
+        "tratti": ["Altruista", "Coraggioso", "Intelligente", "Onesto", "Pacifico", "Ambizioso", "Leale", "Indipendente"],
+        "oggetti": ["Un coltello da lancio perfettamente bilanciato", "Una giacca corazzata",
+                    "Un manuale di simulazioni", "Un walkie-talkie di fazione",
+                    "Un diario segreto", "Un paio di scarpe da salto"],
+        "alleati": ["Un compagno di addestramento fidato", "Un mentore severo ma giusto",
+                    "Un amico d'infanzia leale", "Un informatore misterioso",
+                    "Un istruttore Intrepido", "Un alleato Erudito"],
+        "entita": DIVERGENT,
+        "gradiente_default": "linear-gradient(135deg, #0d1114 0%, #2b3238 50%, #4a555e 100%)",
+        "rgb_top": (13, 17, 20),
+        "rgb_bottom": (74, 85, 94),
+        "font_titolo": "titolo_div",
+    },
+    "hunger": {
+        "titolo": "Crea il tuo Tributo",
+        "eyebrow": "IL CAMPIDOGLIO PRESENTA UN NUOVO TRIBUTO",
+        "tratti": ["Resiliente", "Astuto", "Leale", "Silenzioso", "Carismatico", "Protettivo", "Calcolatore", "Coraggioso"],
+        "oggetti": ["Un arco con faretra", "Un coltello da lancio", "Una rete da pesca",
+                    "Un kit di erbe medicinali", "Una fionda", "Un mantello mimetico"],
+        "alleati": ["Un tributo alleato fidato", "Un mentore esperto", "Uno sponsor misterioso",
+                    "Un compagno di distretto", "Una guida silenziosa", "Un animale della foresta addomesticato"],
+        "entita": DISTRICTS,
+        "gradiente_default": "linear-gradient(135deg, #0c0f08 0%, #2c3322 50%, #6b7a4a 100%)",
+        "rgb_top": (12, 15, 8),
+        "rgb_bottom": (107, 122, 74),
+        "font_titolo": "titolo_hg",
+    },
+}
+
+
+# ============================================================
+# DATI — SOPRAVVIVENZA NELL'ARENA (Hunger Games)
+# Simulatore narrativo a bivi originale, non testo protetto.
+# Ogni scelta modifica salute e provviste; se la salute crolla
+# a zero il tributo viene eliminato prima della fine dei giorni.
+# ============================================================
+GIORNI_ARENA = [
+    {
+        "situazione": "Il gong suona e la Cornucopia è a pochi passi, circondata da rifornimenti e altri tributi pronti a scattare. Cosa fai?",
+        "scelte": [
+            ("Mi fiondo al centro per prendere il massimo possibile, rischiando lo scontro", {"salute": -15, "provviste": 25}),
+            ("Scappo subito verso la foresta, senza rischiare nulla", {"salute": 0, "provviste": 0}),
+            ("Prendo solo ciò che è alla portata sul bordo, senza avvicinarmi troppo", {"salute": -3, "provviste": 10}),
+        ],
+    },
+    {
+        "situazione": "Trovi una fonte d'acqua, ma un altro tributo sembra sorvegliarla in agguato tra i cespugli. Cosa fai?",
+        "scelte": [
+            ("Lo affronto apertamente per avere via libera", {"salute": -15, "provviste": 15}),
+            ("Aspetto nascosto che si allontani", {"salute": 0, "provviste": 5}),
+            ("Cerco un'altra fonte d'acqua più lontana e sicura", {"salute": -5, "provviste": -5}),
+        ],
+    },
+    {
+        "situazione": "Incontri un altro tributo, ferito e disarmato, che non sembra una minaccia. Cosa fai?",
+        "scelte": [
+            ("Lo aiuto, condividendo parte delle mie provviste", {"salute": 0, "provviste": -15}),
+            ("Lo ignoro e proseguo per la mia strada", {"salute": 0, "provviste": 0}),
+            ("Ne approfitto per recuperare il suo equipaggiamento", {"salute": 0, "provviste": 12}),
+        ],
+    },
+    {
+        "situazione": "Di notte scoppia un violento temporale scatenato dai Game Maker. Come reagisci?",
+        "scelte": [
+            ("Cerco subito un riparo sicuro, anche se mi costa tempo e provviste", {"salute": 8, "provviste": -10}),
+            ("Continuo a muovermi per non perdere terreno prezioso", {"salute": -12, "provviste": -5}),
+            ("Mi rannicchio dove sono, risparmiando le forze", {"salute": -5, "provviste": 0}),
+        ],
+    },
+    {
+        "situazione": "Le provviste iniziano a scarseggiare e la fame si fa sentire. Cosa fai?",
+        "scelte": [
+            ("Vado a caccia, rischiando di essere scoperto dagli altri tributi", {"salute": -10, "provviste": 20}),
+            ("Razioni quello che hai e aspetti un momento più sicuro", {"salute": -5, "provviste": -8}),
+            ("Mandi un segnale nella speranza che uno sponsor ti aiuti", {"salute": 0, "provviste": 12}),
+        ],
+    },
+    {
+        "situazione": "È rimasto solo un pugno di tributi. Il gong finale sta per suonare. Come affronti l'ultimo scontro?",
+        "scelte": [
+            ("Affronto l'ultimo avversario a viso aperto", {"salute": -20, "provviste": 0}),
+            ("Tendo un'imboscata strategica, sfruttando il terreno", {"salute": -10, "provviste": 0}),
+            ("Aspetto in disparte che gli altri si eliminino a vicenda", {"salute": -5, "provviste": 0}),
+        ],
+    },
+]
+
+
+# ============================================================
+# DATI — MAPPE INTERATTIVE (punti d'interesse per ogni mondo:
+# dettagli fattuali dell'universo narrativo, non testo protetto)
+# ============================================================
+MAP_POIS = {
+    "hogwarts": {
+        "titolo": "Mappa di Hogwarts",
+        "eyebrow": "\"Giuro solennemente di avere secondi fini...\"",
+        "stile_card": "parchment",
+        "font_titolo_css": "hat-title",
+        "luoghi": [
+            {"slug": "salone", "nome": "Il Grande Salone", "x": 130, "y": 120,
+             "desc": "Cuore pulsante del castello: qui si consumano i pasti sotto un soffitto incantato che riflette il cielo reale, e si tengono le grandi cerimonie come lo Smistamento."},
+            {"slug": "biblioteca", "nome": "La Biblioteca", "x": 400, "y": 90,
+             "desc": "Una sterminata raccolta di libri e pergamene magiche, custodita con rigore. Alcune sezioni, quelle più pericolose, sono accessibili solo con permesso speciale."},
+            {"slug": "foresta", "nome": "La Foresta Proibita", "x": 620, "y": 220,
+             "desc": "Un bosco fitto e oscuro ai confini della scuola, rifugio di creature magiche potenti e imprevedibili. Gli studenti non possono entrarvi senza autorizzazione."},
+            {"slug": "quidditch", "nome": "Il Campo di Quidditch", "x": 250, "y": 300,
+             "desc": "Un ampio campo ovale dove si disputano le partite tra le quattro case, seguite dall'intera scuola dagli spalti."},
+            {"slug": "torre", "nome": "La Torre di Astronomia", "x": 520, "y": 60,
+             "desc": "Il punto più alto del castello, usato per le lezioni di osservazione del cielo notturno e raggiungibile da una lunga scalinata a chiocciola."},
+        ],
+    },
+    "percy": {
+        "titolo": "Mappa del Campo Mezzosangue",
+        "eyebrow": "\"Non è sicuro per un semidio restare fermo troppo a lungo.\"",
+        "stile_card": "marble",
+        "font_titolo_css": "camp-title",
+        "luoghi": [
+            {"slug": "casa_grande", "nome": "La Casa Grande", "x": 400, "y": 100,
+             "desc": "Sede amministrativa del campo, dove risiedono gli istruttori e si tengono le riunioni più importanti tra i capicampo."},
+            {"slug": "arena", "nome": "L'Arena di Combattimento", "x": 160, "y": 200,
+             "desc": "Uno spazio a cielo aperto dedicato all'addestramento con la spada e le altre armi, sorvegliato dagli istruttori più esperti."},
+            {"slug": "bosco", "nome": "Il Bosco", "x": 620, "y": 160,
+             "desc": "Un'ampia area selvaggia dove i campisti affrontano prove pratiche e, talvolta, creature mitologiche vere e proprie."},
+            {"slug": "spiaggia", "nome": "La Spiaggia", "x": 300, "y": 320,
+             "desc": "Il tratto di costa dove il campo si affaccia sul mare, territorio in cui l'influenza di Poseidone si fa sentire più forte."},
+            {"slug": "cabine", "nome": "Le Cabine", "x": 500, "y": 280,
+             "desc": "L'area residenziale del campo, con un edificio dedicato a ciascun dio dell'Olimpo che ha figli tra i campisti."},
+        ],
+    },
+    "divergent": {
+        "titolo": "Mappa della Città delle Fazioni",
+        "eyebrow": "\"Fazione prima del sangue.\"",
+        "stile_card": "steel",
+        "font_titolo_css": "steel-title",
+        "luoghi": [
+            {"slug": "erudito", "nome": "Il Quartier Erudito", "x": 150, "y": 100,
+             "desc": "Un complesso di biblioteche e laboratori dove gli Eruditi conducono ricerche e conservano il sapere della città."},
+            {"slug": "pozzo", "nome": "Il Pozzo", "x": 420, "y": 90,
+             "desc": "L'ingresso sotterraneo al quartiere Intrepido, raggiungibile solo con un salto nel vuoto per i nuovi iniziati."},
+            {"slug": "recinto", "nome": "Il Recinto", "x": 620, "y": 240,
+             "desc": "Il confine esterno della città, pattugliato e mantenuto dagli Abneganti per proteggere chi vive all'interno."},
+            {"slug": "tribunale", "nome": "Il Tribunale", "x": 300, "y": 300,
+             "desc": "L'edificio bianco e nero dove i Candidi amministrano la giustizia, basandosi sulla ricerca collettiva della verità."},
+            {"slug": "frutteti", "nome": "I Frutteti", "x": 500, "y": 340,
+             "desc": "Le terre agricole coltivate dai Pacifici, fuori dal centro città, fonte di gran parte del cibo della comunità."},
+        ],
+    },
+    "hunger": {
+        "titolo": "Mappa di Panem",
+        "eyebrow": "\"Che le probabilità siano sempre a tuo favore.\"",
+        "stile_card": "canvas",
+        "font_titolo_css": "arena-title",
+        "luoghi": [
+            {"slug": "capitol", "nome": "Il Campidoglio", "x": 400, "y": 80,
+             "desc": "Il cuore politico e amministrativo di Panem, sede del governo centrale e dei fasti mostrati durante i Giochi."},
+            {"slug": "arena", "nome": "L'Arena", "x": 180, "y": 180,
+             "desc": "Il teatro artificiale costruito ogni anno per ospitare i Giochi, con un ambiente e delle regole sempre diverse."},
+            {"slug": "villaggio", "nome": "Il Villaggio dei Vincitori", "x": 620, "y": 200,
+             "desc": "Un quartiere di case riservate a chi ha vinto i Giochi in passato, situato ai margini del proprio distretto natale."},
+            {"slug": "miniera", "nome": "La Miniera di Carbone", "x": 280, "y": 320,
+             "desc": "Il cuore industriale del Distretto 12, dove gran parte della popolazione lavora in condizioni durissime."},
+            {"slug": "giustizia", "nome": "Il Palazzo di Giustizia", "x": 500, "y": 300,
+             "desc": "L'edificio principale di ogni distretto, dove si svolge la cerimonia della Mietitura ogni anno."},
+        ],
+    },
+}
 
 
 
@@ -2372,6 +2581,394 @@ def render_hunger_games():
 
 
 # ============================================================
+# SELETTORE DI MONDO (condiviso da Creatore e Mappe)
+# ============================================================
+def render_selettore_mondo(session_key):
+    opzioni = [
+        ("hogwarts", "🎩", "Hogwarts"),
+        ("percy", "⚡", "Campo Mezzosangue"),
+        ("divergent", "⚖️", "Fazioni"),
+        ("hunger", "🔥", "Panem"),
+    ]
+    col1, col2 = st.columns(2)
+    for i, (chiave, emoji, nome) in enumerate(opzioni):
+        col = col1 if i % 2 == 0 else col2
+        with col:
+            if st.button(f"{emoji}  {nome}", key=f"{session_key}_{chiave}", use_container_width=True):
+                st.session_state[session_key] = chiave
+                st.rerun()
+
+
+# ============================================================
+# GENERAZIONE IMMAGINE — SCHEDA PERSONAGGIO
+# ============================================================
+def genera_immagine_personaggio(r, dati, info_aff):
+    W, H = 1080, 1080
+    top, bottom = info_aff["rgb_top"], info_aff["rgb_bottom"]
+    img = Image.new("RGB", (W, H), top)
+    draw = ImageDraw.Draw(img)
+    for y in range(H):
+        t = y / H
+        col = tuple(int(top[c] + (bottom[c] - top[c]) * t) for c in range(3))
+        draw.line([(0, y), (W, y)], fill=col)
+
+    margine = 46
+    draw.rectangle([margine, margine, W - margine, H - margine], outline=(243, 217, 139), width=6)
+    draw.rectangle(
+        [margine + 14, margine + 14, W - margine - 14, H - margine - 14],
+        outline=(243, 217, 139, 120), width=1,
+    )
+
+    fonts_bytes = carica_font()
+    f_eyebrow = _font(fonts_bytes, "corsivo", 30)
+    f_titolo = _font(fonts_bytes, dati["font_titolo"], 80)
+    f_desc = _font(fonts_bytes, "corpo", 32)
+    f_footer = _font(fonts_bytes, "corsivo", 24)
+
+    def testo_centrato(testo, y, font, fill=(255, 255, 255)):
+        bbox = draw.textbbox((0, 0), testo, font=font)
+        larghezza = bbox[2] - bbox[0]
+        draw.text(((W - larghezza) / 2, y), testo, font=font, fill=fill)
+
+    def altezza_testo(testo, font):
+        bbox = draw.textbbox((0, 0), testo, font=font)
+        return bbox[3] - bbox[1]
+
+    testo_centrato(dati["eyebrow"], 150, f_eyebrow, (255, 255, 255))
+    testo_centrato(r["nome"].upper(), 205, f_titolo, (255, 255, 255))
+    testo_centrato(f"Affiliazione: {r['affiliazione']}", 320, f_desc, (255, 255, 255))
+
+    dettagli = [
+        ("Tratti", ", ".join(r["tratti"])),
+        ("Oggetto", r["oggetto"]),
+        ("Alleato", r["alleato"]),
+    ]
+    dettagli_wrap = [(label, textwrap.wrap(valore, width=40) or [""]) for label, valore in dettagli]
+
+    padding_box, gap_label_valore, gap_tra_righe = 22, 6, 14
+    altezze_righe = []
+    for label, righe_valore in dettagli_wrap:
+        h = altezza_testo(label.upper(), f_footer) + gap_label_valore
+        h += sum(altezza_testo(r_ or "Ag", f_desc) + 8 for r_ in righe_valore)
+        altezze_righe.append(h)
+
+    box_h = padding_box * 2 + sum(altezze_righe) + gap_tra_righe * (len(dettagli_wrap) - 1)
+    y_box = 400
+    draw.rectangle([120, y_box, W - 120, y_box + box_h], outline=(255, 255, 255, 150), width=2)
+
+    y_cursor = y_box + padding_box
+    for i, (label, righe_valore) in enumerate(dettagli_wrap):
+        draw.text((150, y_cursor), label.upper(), font=f_footer, fill=(255, 255, 255, 200))
+        y_val = y_cursor + altezza_testo(label.upper(), f_footer) + gap_label_valore
+        for riga in righe_valore:
+            draw.text((150, y_val), riga, font=f_desc, fill=(255, 255, 255))
+            y_val += altezza_testo(riga or "Ag", f_desc) + 8
+        if i < len(dettagli_wrap) - 1:
+            y_line = y_val + gap_tra_righe / 2
+            draw.line([(150, y_line), (W - 150, y_line)], fill=(255, 255, 255, 60), width=1)
+        y_cursor = y_val + gap_tra_righe
+
+    testo_centrato(dati["titolo"].upper(), H - 110, f_footer, (255, 255, 255))
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    return buf
+
+
+# ============================================================
+# STRUMENTO 1 — CREATORE DI PERSONAGGIO
+# ============================================================
+def render_creator():
+    if st.button("← Torna al menu"):
+        st.session_state.pagina = "menu"
+        st.session_state.pop("creator_mondo", None)
+        st.session_state.pop("creator_risultato", None)
+        st.rerun()
+
+    st.markdown('<div class="hat-title" style="font-size:2.3rem;">🪄 Creatore di Personaggio</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Scegli il mondo in cui vuoi dare vita al tuo personaggio</div>', unsafe_allow_html=True)
+
+    mondo = st.session_state.get("creator_mondo")
+    if not mondo:
+        render_selettore_mondo("creator_mondo")
+        return
+
+    dati = CREATOR_DATA[mondo]
+
+    if "creator_risultato" not in st.session_state:
+        st.markdown(f'<div class="parchment"><h3>{dati["titolo"]}</h3></div>', unsafe_allow_html=True)
+        nome_pg = st.text_input("Come si chiama il tuo personaggio?", placeholder="Scrivi un nome...")
+        tratti_scelti = st.multiselect("Scegli fino a 2 tratti caratteriali", dati["tratti"], max_selections=2)
+
+        if st.button("✨ Genera il personaggio", use_container_width=True):
+            if not nome_pg.strip():
+                st.warning("Dai un nome al tuo personaggio prima di procedere!")
+            elif not tratti_scelti:
+                st.warning("Scegli almeno un tratto caratteriale!")
+            else:
+                st.session_state.creator_risultato = {
+                    "nome": html.escape(nome_pg.strip())[:40],
+                    "tratti": tratti_scelti,
+                    "affiliazione": random.choice(list(dati["entita"].keys())),
+                    "oggetto": random.choice(dati["oggetti"]),
+                    "alleato": random.choice(dati["alleati"]),
+                }
+                st.rerun()
+
+        if st.button("🔄 Cambia mondo", use_container_width=True):
+            st.session_state.pop("creator_mondo", None)
+            st.rerun()
+
+    else:
+        r = st.session_state.creator_risultato
+        info_aff = dati["entita"][r["affiliazione"]]
+        st.balloons()
+
+        dettagli_html = "".join(
+            f'<div class="fact-item"><span class="fact-label">Tratto</span><span class="fact-value">{t}</span></div>'
+            for t in r["tratti"]
+        )
+        st.markdown(
+            textwrap.dedent(f"""\
+            <div class="result-card" style="background:{info_aff['gradiente']};">
+            <div style="font-size:2.4rem;">{info_aff['emoji']}</div>
+            <div class="result-house">{r['nome']}</div>
+            <div class="result-desc">Affiliazione: {r['affiliazione']}</div>
+            <div class="fact-grid">
+            {dettagli_html}
+            <div class="fact-item span2"><span class="fact-label">Oggetto</span><span class="fact-value">{r['oggetto']}</span></div>
+            <div class="fact-item span2"><span class="fact-label">Alleato</span><span class="fact-value">{r['alleato']}</span></div>
+            </div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+
+        st.write("")
+        with st.spinner("Sto preparando la scheda del personaggio..."):
+            buf = genera_immagine_personaggio(r, dati, info_aff)
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.image(buf, use_container_width=True)
+        with col2:
+            st.write("")
+            st.write("Scarica la scheda del tuo personaggio e condividila dove vuoi.")
+            nome_file = re.sub(r"[^a-z0-9]+", "_", r["nome"].lower()).strip("_") or "personaggio"
+            st.download_button(
+                "📥 Scarica la scheda", data=buf,
+                file_name=f"{nome_file}.png", mime="image/png", use_container_width=True,
+            )
+
+        st.write("")
+        if st.button("🔄 Crea un altro personaggio", use_container_width=True):
+            st.session_state.pop("creator_risultato", None)
+            st.rerun()
+
+
+# ============================================================
+# STRUMENTO 2 — SOPRAVVIVENZA NELL'ARENA (Hunger Games)
+# ============================================================
+def render_survival():
+    prefix = "surv"
+
+    if st.button("← Torna al menu"):
+        st.session_state.pagina = "menu"
+        st.rerun()
+
+    render_arena_background()
+    st.markdown('<div class="arena-title">Sopravvivenza nell\'Arena</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="arena-subtitle">"Che le probabilità siano sempre a tuo favore... ma quanto durerai davvero?"</div>',
+        unsafe_allow_html=True,
+    )
+
+    for chiave, default in [
+        ("iniziato", False), ("giorno", 0), ("salute", 100),
+        ("provviste", 60), ("log", []), ("finito", False), ("esito", None),
+    ]:
+        if f"{prefix}_{chiave}" not in st.session_state:
+            st.session_state[f"{prefix}_{chiave}"] = default
+
+    def reset_survival():
+        st.session_state[f"{prefix}_iniziato"] = False
+        st.session_state[f"{prefix}_giorno"] = 0
+        st.session_state[f"{prefix}_salute"] = 100
+        st.session_state[f"{prefix}_provviste"] = 60
+        st.session_state[f"{prefix}_log"] = []
+        st.session_state[f"{prefix}_finito"] = False
+        st.session_state[f"{prefix}_esito"] = None
+
+    if not st.session_state[f"{prefix}_iniziato"]:
+        render_arena_compass()
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="canvas">
+            <h3>Prima del Gong</h3>
+            Affronterai 6 giorni nell'arena. Ogni scelta influisce sulla tua
+            salute e sulle tue provviste: se la salute crolla a zero, il tuo
+            percorso finisce lì. Sopravvivi fino alla fine e sarai il vincitore
+            dei Giochi.
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("🔥 Entra nell'Arena", use_container_width=True):
+            st.session_state[f"{prefix}_iniziato"] = True
+            st.rerun()
+
+    elif not st.session_state[f"{prefix}_finito"]:
+        giorno_idx = st.session_state[f"{prefix}_giorno"]
+        giorno = GIORNI_ARENA[giorno_idx]
+
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.markdown(f'<div class="qcounter arena">Giorno {giorno_idx + 1} di {len(GIORNI_ARENA)}</div>', unsafe_allow_html=True)
+            st.write(f"❤️ Salute: {st.session_state[f'{prefix}_salute']}")
+            st.progress(max(st.session_state[f"{prefix}_salute"], 0) / 100)
+        with col_b:
+            st.write("")
+            st.write(f"🎒 Provviste: {st.session_state[f'{prefix}_provviste']}")
+            st.progress(max(min(st.session_state[f"{prefix}_provviste"], 100), 0) / 100)
+
+        render_typewriter_question(giorno["situazione"], stile="arena")
+
+        for testo_scelta, effetti in giorno["scelte"]:
+            if st.button(testo_scelta, key=f"{prefix}_{giorno_idx}_{testo_scelta}"):
+                nuova_salute = max(0, min(100, st.session_state[f"{prefix}_salute"] + effetti["salute"]))
+                nuove_provviste = max(0, min(100, st.session_state[f"{prefix}_provviste"] + effetti["provviste"]))
+                st.session_state[f"{prefix}_salute"] = nuova_salute
+                st.session_state[f"{prefix}_provviste"] = nuove_provviste
+                st.session_state[f"{prefix}_log"].append((giorno_idx + 1, testo_scelta))
+                if nuova_salute <= 0:
+                    st.session_state[f"{prefix}_finito"] = True
+                    st.session_state[f"{prefix}_esito"] = "eliminato"
+                elif giorno_idx + 1 >= len(GIORNI_ARENA):
+                    st.session_state[f"{prefix}_finito"] = True
+                    st.session_state[f"{prefix}_esito"] = "vincitore"
+                else:
+                    st.session_state[f"{prefix}_giorno"] += 1
+                st.rerun()
+
+    else:
+        esito = st.session_state[f"{prefix}_esito"]
+        giorni_sopravvissuti = len(st.session_state[f"{prefix}_log"])
+
+        if esito == "vincitore":
+            titolo_esito = "🏆 Sei il Vincitore dei Giochi!"
+            desc_esito = (
+                f"Hai attraversato tutti i {len(GIORNI_ARENA)} giorni nell'arena e sei tornato a casa. "
+                "Il tuo Distretto festeggia il tuo ritorno."
+            )
+            gradiente_esito = "linear-gradient(135deg, #4a3b00 0%, #b89b1a 50%, #ffdb00 100%)"
+            st.balloons()
+        else:
+            titolo_esito = "💀 Sei stato eliminato"
+            desc_esito = (
+                f"Sei sopravvissuto per {giorni_sopravvissuti} giorni su {len(GIORNI_ARENA)} "
+                "prima che l'arena avesse la meglio su di te."
+            )
+            gradiente_esito = "linear-gradient(135deg, #280404 0%, #6e0f0f 50%, #961414 100%)"
+
+        st.markdown(
+            textwrap.dedent(f"""\
+            <div class="result-card" style="background:{gradiente_esito};">
+            <div style="font-size:3rem;">{'🏆' if esito == 'vincitore' else '💀'}</div>
+            <div class="result-house arena">{titolo_esito}</div>
+            <div class="result-desc arena">{desc_esito}</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+
+        st.write("")
+        st.markdown('<div class="canvas"><h3>Il tuo percorso nell\'arena</h3></div>', unsafe_allow_html=True)
+        for giorno_n, scelta in st.session_state[f"{prefix}_log"]:
+            st.write(f"**Giorno {giorno_n}:** {scelta}")
+
+        st.write("")
+        if st.button("🔄 Rientra nell'Arena", use_container_width=True):
+            reset_survival()
+            st.rerun()
+
+
+# ============================================================
+# STRUMENTO 3 — MAPPE INTERATTIVE
+# ============================================================
+def render_map_svg(luoghi, stile_card):
+    marcatori = "".join(
+        f'<a href="?loc={l["slug"]}">'
+        f'<circle cx="{l["x"]}" cy="{l["y"]}" r="14" fill="#8a1f1f" stroke="#f3d98b" stroke-width="2"/>'
+        f'<circle cx="{l["x"]}" cy="{l["y"]}" r="5" fill="#f3d98b"/>'
+        f'<text x="{l["x"]}" y="{l["y"] - 20}" font-size="15" font-weight="700" '
+        f'fill="currentColor" text-anchor="middle">{l["nome"]}</text>'
+        f'</a>'
+        for l in luoghi
+    )
+    linee = "".join(
+        f'<line x1="{luoghi[i]["x"]}" y1="{luoghi[i]["y"]}" x2="{luoghi[i + 1]["x"]}" y2="{luoghi[i + 1]["y"]}" '
+        f'stroke="currentColor" stroke-width="1.5" stroke-dasharray="6,6" opacity="0.4"/>'
+        for i in range(len(luoghi) - 1)
+    )
+    svg = textwrap.dedent(f"""\
+    <div class="{stile_card}" style="padding:1rem;">
+    <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+    {linee}
+    {marcatori}
+    </svg>
+    </div>
+    """)
+    st.markdown(svg, unsafe_allow_html=True)
+
+
+def render_mappe():
+    if st.button("← Torna al menu"):
+        st.session_state.pagina = "menu"
+        st.session_state.pop("mappa_mondo", None)
+        try:
+            st.query_params.clear()
+        except Exception:
+            pass
+        st.rerun()
+
+    st.markdown('<div class="nexus-title" style="font-size:2.2rem;">🗺️ Mappe Interattive</div>', unsafe_allow_html=True)
+    st.markdown('<div class="nexus-subtitle">Scegli un mondo ed esplora i suoi luoghi</div>', unsafe_allow_html=True)
+
+    mondo = st.session_state.get("mappa_mondo")
+    if not mondo:
+        render_selettore_mondo("mappa_mondo")
+        return
+
+    dati = MAP_POIS[mondo]
+    st.markdown(f'<div class="{dati["font_titolo_css"]}" style="font-size:2rem;">{dati["titolo"]}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="subtitle">{dati["eyebrow"]}</div>', unsafe_allow_html=True)
+
+    render_map_svg(dati["luoghi"], dati["stile_card"])
+
+    try:
+        loc = st.query_params.get("loc")
+    except Exception:
+        loc = None
+
+    luogo_trovato = next((l for l in dati["luoghi"] if l["slug"] == loc), None)
+    if luogo_trovato:
+        st.markdown(
+            f'<div class="{dati["stile_card"]}"><h3>{luogo_trovato["nome"]}</h3>{luogo_trovato["desc"]}</div>',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.info("Clicca su un punto della mappa per scoprire cosa nasconde quel luogo.")
+
+    if st.button("🔄 Cambia mondo", use_container_width=True):
+        st.session_state.pop("mappa_mondo", None)
+        try:
+            st.query_params.clear()
+        except Exception:
+            pass
+        st.rerun()
+
+
+# ============================================================
 # MENU INIZIALE
 # ============================================================
 def render_menu():
@@ -2447,6 +3044,59 @@ def render_menu():
             st.session_state.pagina = "hunger"
             st.rerun()
 
+    st.write("")
+    st.markdown(
+        '<div class="nexus-subtitle" style="margin-top:0.4rem;">Altri strumenti</div>',
+        unsafe_allow_html=True,
+    )
+
+    col5, col6, col7 = st.columns(3)
+
+    with col5:
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="menu-card" style="background:linear-gradient(160deg, #3a2a05 0%, #4a1608 100%);">
+            <div class="menu-card-icon">🪄</div>
+            <div class="menu-card-title">Creatore di Personaggio</div>
+            <div class="menu-card-desc">Dai vita al tuo personaggio in uno dei quattro mondi</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("Crea il tuo personaggio", key="entra_creator", use_container_width=True):
+            st.session_state.pagina = "creator"
+            st.rerun()
+
+    with col6:
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="menu-card" style="background:linear-gradient(160deg, #0c0f08 0%, #4a1608 100%);">
+            <div class="menu-card-icon">🏹</div>
+            <div class="menu-card-title arena">Sopravvivenza nell'Arena</div>
+            <div class="menu-card-desc">Affronta 6 giorni nell'arena di Hunger Games e scopri se sopravvivi</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("Entra nell'Arena", key="entra_survival", use_container_width=True):
+            st.session_state.pagina = "survival"
+            st.rerun()
+
+    with col7:
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="menu-card" style="background:linear-gradient(160deg, #0e2233 0%, #1a2f14 100%);">
+            <div class="menu-card-icon">🗺️</div>
+            <div class="menu-card-title">Mappe Interattive</div>
+            <div class="menu-card-desc">Esplora i luoghi più iconici di ciascun mondo</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("Esplora le mappe", key="entra_mappe", use_container_width=True):
+            st.session_state.pagina = "mappe"
+            st.rerun()
+
 
 # ============================================================
 # NAVIGAZIONE PRINCIPALE
@@ -2464,3 +3114,9 @@ elif st.session_state.pagina == "divergent":
     render_divergent()
 elif st.session_state.pagina == "hunger":
     render_hunger_games()
+elif st.session_state.pagina == "creator":
+    render_creator()
+elif st.session_state.pagina == "survival":
+    render_survival()
+elif st.session_state.pagina == "mappe":
+    render_mappe()
