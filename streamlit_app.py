@@ -1736,8 +1736,8 @@ def carica_font():
         "titolo_pj": "https://github.com/google/fonts/raw/main/ofl/cinzel/Cinzel[wght].ttf",
         "titolo_div": "https://github.com/google/fonts/raw/main/ofl/barlowcondensed/BarlowCondensed-Bold.ttf",
         "titolo_hg": "https://github.com/google/fonts/raw/main/ofl/bebasneue/BebasNeue-Regular.ttf",
-        "corpo": "https://github.com/google/fonts/raw/main/ofl/ebgaramond/EBGaramond-Regular.ttf",
-        "corsivo": "https://github.com/google/fonts/raw/main/ofl/ebgaramond/EBGaramond-Italic.ttf",
+        "corpo": "https://github.com/google/fonts/raw/main/ofl/ebgaramond/EBGaramond[wght].ttf",
+        "corsivo": "https://github.com/google/fonts/raw/main/ofl/ebgaramond/EBGaramond-Italic[wght].ttf",
     }
     for nome, url in sorgenti.items():
         try:
@@ -1800,17 +1800,19 @@ def genera_immagine_condivisione(nome_entita, info, eyebrow_text, footer_text, t
         y_desc += 46
 
     dettagli = info["dettagli"][:4]
+    padding_box = 24
+    row_h = 58
+    box_h = padding_box * 2 + row_h * len(dettagli)
     y_box = y_desc + 60
-    box_h = 240
     draw.rectangle([120, y_box, W - 120, y_box + box_h], outline=(255, 255, 255, 150), width=2)
-    riga_h = box_h / len(dettagli)
     for i, (label, valore) in enumerate(dettagli):
-        y_riga = y_box + i * riga_h + riga_h / 2 - 16
-        draw.text((150, y_riga - 22), label.upper(), font=f_footer, fill=(255, 255, 255, 200))
-        draw.text((150, y_riga + 8), valore, font=f_desc, fill=(255, 255, 255))
+        y_row = y_box + padding_box + i * row_h
+        draw.text((150, y_row), label.upper(), font=f_footer, fill=(255, 255, 255, 200))
+        draw.text((150, y_row + 28), valore, font=f_desc, fill=(255, 255, 255))
         if i < len(dettagli) - 1:
+            y_line = y_row + row_h - 8
             draw.line(
-                [(150, y_box + (i + 1) * riga_h), (W - 150, y_box + (i + 1) * riga_h)],
+                [(150, y_line), (W - 150, y_line)],
                 fill=(255, 255, 255, 60), width=1,
             )
 
