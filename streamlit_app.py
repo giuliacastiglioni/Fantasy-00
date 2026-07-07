@@ -1024,11 +1024,11 @@ GIORNI_ARENA = [
 MAP_POIS = {
     "hogwarts": {
         "titolo": "Mappa di Hogwarts",
-        "eyebrow": "\"Giuro solennemente di avere secondi fini...\"",
+        "eyebrow": "\"Giuro solennemente di non avere buone intenzioni...\"",
         "stile_card": "parchment",
         "font_titolo_css": "hat-title",
         "luoghi": [
-            {"slug": "salone", "nome": "Il Grande Salone", "x": 130, "y": 120,
+            {"slug": "salone", "nome": "La Sala Grande", "x": 130, "y": 120,
              "desc": "Cuore pulsante del castello: qui si consumano i pasti sotto un soffitto incantato che riflette il cielo reale, e si tengono le grandi cerimonie come lo Smistamento."},
             {"slug": "biblioteca", "nome": "La Biblioteca", "x": 400, "y": 90,
              "desc": "Una sterminata raccolta di libri e pergamene magiche, custodita con rigore. Alcune sezioni, quelle più pericolose, sono accessibili solo con permesso speciale."},
