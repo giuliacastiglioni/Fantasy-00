@@ -1,4 +1,4 @@
 streamlit
-plotly.graph_objects
+plotly
 pillow
 requests
