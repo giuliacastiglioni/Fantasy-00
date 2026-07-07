@@ -611,7 +611,7 @@ def rispondi(punti_assegnati):
 # ============================================================
 # INTERFACCIA
 # ============================================================
-st.markdown('<div class="hat-title">🎩 Il Cappello Parlante 🎩</div>', unsafe_allow_html=True)
+st.markdown('<div class="hat-title"> Il Cappello Parlante </div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">"Mmh... difficile, molto difficile. Vediamo cosa nascondi davvero..."</div>', unsafe_allow_html=True)
 
 if not st.session_state.iniziato:
