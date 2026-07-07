@@ -643,13 +643,260 @@ QUESTIONS_DIV = [
 
 
 # ============================================================
+# DATI — DISTRETTI DI HUNGER GAMES
+# (industria, simbolo, colori, tributi noti, valori: dettagli
+#  fattuali dell'universo del romanzo, non testo protetto)
+# ============================================================
+DISTRICTS = {
+    "Distretto 1": {
+        "gradiente": "linear-gradient(135deg, #6b5108 0%, #b8952e 50%, #f0dfa0 100%)",
+        "rgb_top": (107, 81, 8),
+        "rgb_bottom": (240, 223, 160),
+        "emoji": "💎",
+        "descrizione": "Sei cresciuto per vincere. La competizione ti motiva più di ogni altra cosa, e raramente dubiti delle tue capacità.",
+        "dettagli": [
+            ("Industria", "Beni di lusso e gioielli"),
+            ("Simbolo", "Diamante"),
+            ("Colori", "Oro e avorio"),
+            ("Tributi noti", "Glimmer, Marvel"),
+            ("Valori", "Ambizione, competitività, sicurezza di sé"),
+        ],
+    },
+    "Distretto 2": {
+        "gradiente": "linear-gradient(135deg, #2b2b2b 0%, #5a1414 50%, #8a2020 100%)",
+        "rgb_top": (43, 43, 43),
+        "rgb_bottom": (138, 32, 32),
+        "emoji": "⛏️",
+        "descrizione": "Ti sei allenato tutta la vita per essere pronto a qualsiasi sfida. La disciplina è la tua corazza.",
+        "dettagli": [
+            ("Industria", "Cave di pietra e addestramento"),
+            ("Simbolo", "Martello e piccone incrociati"),
+            ("Colori", "Grigio pietra e rosso"),
+            ("Tributi noti", "Cato, Clove"),
+            ("Valori", "Forza, disciplina, addestramento rigoroso"),
+        ],
+    },
+    "Distretto 3": {
+        "gradiente": "linear-gradient(135deg, #1c2128 0%, #384a5c 50%, #6fa3c9 100%)",
+        "rgb_top": (28, 33, 40),
+        "rgb_bottom": (111, 163, 201),
+        "emoji": "⚙️",
+        "descrizione": "La tua mente lavora come un meccanismo perfetto: precisa, metodica, sempre un passo avanti nel trovare soluzioni che nessun altro vede.",
+        "dettagli": [
+            ("Industria", "Elettronica e tecnologia"),
+            ("Simbolo", "Ingranaggio e circuito"),
+            ("Colori", "Grigio metallizzato e blu elettrico"),
+            ("Tributi noti", "Beetee, Wiress"),
+            ("Valori", "Ingegno, precisione, pensiero laterale"),
+        ],
+    },
+    "Distretto 4": {
+        "gradiente": "linear-gradient(135deg, #063a42 0%, #157a8a 50%, #6ec6d4 100%)",
+        "rgb_top": (6, 58, 66),
+        "rgb_bottom": (110, 198, 212),
+        "emoji": "🎣",
+        "descrizione": "Ti muovi con la stessa naturalezza di chi è cresciuto tra le onde: capace di adattarti a ogni corrente, ma con radici profonde.",
+        "dettagli": [
+            ("Industria", "Pesca e prodotti del mare"),
+            ("Simbolo", "Rete e tridente"),
+            ("Colori", "Turchese e argento"),
+            ("Tributi noti", "Finnick Odair, Annie Cresta"),
+            ("Valori", "Adattabilità, fascino, resistenza silenziosa"),
+        ],
+    },
+    "Distretto 5": {
+        "gradiente": "linear-gradient(135deg, #3a3418 0%, #7a6d1e 50%, #c9b93c 100%)",
+        "rgb_top": (58, 52, 24),
+        "rgb_bottom": (201, 185, 60),
+        "emoji": "🔌",
+        "descrizione": "Ti muovi silenziosamente, osservando tutto prima di agire. La tua intelligenza pratica ti permette di sopravvivere senza mai esporti troppo.",
+        "dettagli": [
+            ("Industria", "Produzione di energia elettrica"),
+            ("Simbolo", "Fulmine stilizzato"),
+            ("Colori", "Giallo e grigio industriale"),
+            ("Tributi noti", "Foxface (la ragazza dal volto di volpe)"),
+            ("Valori", "Intuito, prudenza, autosufficienza"),
+        ],
+    },
+    "Distretto 7": {
+        "gradiente": "linear-gradient(135deg, #14200e 0%, #355c26 50%, #6e9b4f 100%)",
+        "rgb_top": (20, 32, 14),
+        "rgb_bottom": (110, 155, 79),
+        "emoji": "🪓",
+        "descrizione": "Dietro un'apparenza ruvida nascondi una mente scaltra. Non sottovalutare mai chi sembra il più debole della stanza: potrebbe essere tu.",
+        "dettagli": [
+            ("Industria", "Taglio del legname"),
+            ("Simbolo", "Ascia"),
+            ("Colori", "Verde bosco e marrone"),
+            ("Tributi noti", "Johanna Mason"),
+            ("Valori", "Resistenza, astuzia nascosta, indipendenza"),
+        ],
+    },
+    "Distretto 8": {
+        "gradiente": "linear-gradient(135deg, #2e1a38 0%, #5e3970 50%, #a97fc0 100%)",
+        "rgb_top": (46, 26, 56),
+        "rgb_bottom": (169, 127, 192),
+        "emoji": "🧵",
+        "descrizione": "Trasformi la fatica in qualcosa di bello. Dietro un lavoro spesso invisibile agli altri, nascondi una creatività capace di lasciare il segno.",
+        "dettagli": [
+            ("Industria", "Produzione tessile"),
+            ("Simbolo", "Telaio e spola"),
+            ("Colori", "Viola e grigio perla"),
+            ("Tributi noti", "Cinna (stilista originario del Distretto 8)"),
+            ("Valori", "Creatività, resistenza silenziosa, senso estetico"),
+        ],
+    },
+    "Distretto 11": {
+        "gradiente": "linear-gradient(135deg, #2e2a0a 0%, #6b5f1a 50%, #a8973c 100%)",
+        "rgb_top": (46, 42, 10),
+        "rgb_bottom": (168, 151, 60),
+        "emoji": "🌾",
+        "descrizione": "Il senso di comunità è la tua bussola. Proteggi gli altri con una lealtà silenziosa ma incrollabile.",
+        "dettagli": [
+            ("Industria", "Agricoltura su larga scala"),
+            ("Simbolo", "Spiga di grano"),
+            ("Colori", "Verde oliva e ocra"),
+            ("Tributi noti", "Rue, Thresh"),
+            ("Valori", "Comunità, gentilezza, forza silenziosa"),
+        ],
+    },
+    "Distretto 12": {
+        "gradiente": "linear-gradient(135deg, #0a0a0a 0%, #2e2e30 50%, #5a5a5e 100%)",
+        "rgb_top": (10, 10, 10),
+        "rgb_bottom": (90, 90, 94),
+        "emoji": "🔥",
+        "descrizione": "Hai imparato a sopravvivere con poco, e questo ti ha reso più forte di quanto immagini. Per le persone che ami, saresti pronto a tutto.",
+        "dettagli": [
+            ("Industria", "Estrazione del carbone"),
+            ("Simbolo", "Fiamma"),
+            ("Colori", "Nero antracite e grigio"),
+            ("Tributi noti", "Katniss Everdeen, Peeta Mellark"),
+            ("Valori", "Sopravvivenza, sacrificio, resilienza"),
+        ],
+    },
+}
+
+QUESTIONS_HG = [
+    {
+        "domanda": "Il giorno della Mietitura, il tuo nome viene chiamato ad alta voce. Qual è il tuo primo pensiero?",
+        "opzioni": [
+            ("È la mia occasione per brillare davanti a tutti", {"Distretto 1": 1}),
+            ("Sono pronto: mi sono allenato tutta la vita per questo momento", {"Distretto 2": 1}),
+            ("Comincio subito a valutare ogni scenario possibile, con lucidità", {"Distretto 3": 1}),
+            ("Penso a come dovrò adattarmi in fretta a un ambiente che non conosco", {"Distretto 4": 1}),
+        ],
+    },
+    {
+        "domanda": "Sei nell'arena e trovi la Cornucopia piena di rifornimenti. Cosa fai?",
+        "opzioni": [
+            ("Osservo tutto da lontano prima di avvicinarmi, senza fretta", {"Distretto 5": 1}),
+            ("Aspetto in disparte, osservando chi si fida meno degli altri", {"Distretto 7": 1}),
+            ("Cerco qualcosa di utile ma non essenziale, senza rischiare troppo", {"Distretto 8": 1}),
+            ("Penso prima a chi potrebbe avere più bisogno di me di un oggetto", {"Distretto 11": 1}),
+        ],
+    },
+    {
+        "domanda": "Un alleato ti tradisce nel momento del bisogno. Come reagisci?",
+        "opzioni": [
+            ("Trovo comunque la forza di andare avanti da solo", {"Distretto 12": 1}),
+            ("Mi infastidisco, ma me lo aspettavo: l'alleanza serve solo finché conviene", {"Distretto 1": 1}),
+            ("Non mi lascio destabilizzare: continuo secondo il mio addestramento", {"Distretto 2": 1}),
+            ("Analizzo a freddo cosa questo cambia per il resto del mio piano", {"Distretto 3": 1}),
+        ],
+    },
+    {
+        "domanda": "Qual è la tua strategia preferita per sopravvivere?",
+        "opzioni": [
+            ("Adattarmi rapidamente a qualsiasi ambiente mi capiti", {"Distretto 4": 1}),
+            ("Restare defilato, osservare tutto, muovermi solo quando serve", {"Distretto 5": 1}),
+            ("Restare nell'ombra finché non è il momento di colpire", {"Distretto 7": 1}),
+            ("Costruire con pazienza qualcosa di utile con le mie mani", {"Distretto 8": 1}),
+        ],
+    },
+    {
+        "domanda": "Cosa temi di più, in fondo?",
+        "opzioni": [
+            ("Non riuscire a proteggere chi ha bisogno di me", {"Distretto 11": 1}),
+            ("Non riuscire a proteggere le persone che amo", {"Distretto 12": 1}),
+            ("Essere dimenticato o considerato non abbastanza forte", {"Distretto 1": 1}),
+            ("Fallire dopo essermi allenato per tutta la vita", {"Distretto 2": 1}),
+        ],
+    },
+    {
+        "domanda": "Come ti comporti davanti alle telecamere, durante le interviste?",
+        "opzioni": [
+            ("Rispondo in modo calcolato, senza rivelare troppo", {"Distretto 3": 1}),
+            ("Cerco di essere carismatico, ma senza scoprire troppo di me", {"Distretto 4": 1}),
+            ("Parlo il minimo indispensabile, resto sfuggente", {"Distretto 5": 1}),
+            ("Lascio che gli altri mi sottovalutino: mi conviene", {"Distretto 7": 1}),
+        ],
+    },
+    {
+        "domanda": "Il tuo più grande punto di forza è...",
+        "opzioni": [
+            ("La pazienza e la cura nei dettagli", {"Distretto 8": 1}),
+            ("La capacità di ispirare fiducia negli altri", {"Distretto 11": 1}),
+            ("La resilienza: resisto anche quando tutto sembra perduto", {"Distretto 12": 1}),
+            ("Il fascino e la sicurezza che trasmetto agli altri", {"Distretto 1": 1}),
+        ],
+    },
+    {
+        "domanda": "Trovi cibo scarso nell'arena. Cosa fai?",
+        "opzioni": [
+            ("Vado a caccia attivamente, senza aspettare", {"Distretto 2": 1}),
+            ("Costruisco una trappola calcolata con quello che ho a disposizione", {"Distretto 3": 1}),
+            ("Mi affido all'istinto per trovare una fonte d'acqua o cibo vicina", {"Distretto 4": 1}),
+            ("Razziono con attenzione quello che ho, senza sprechi", {"Distretto 5": 1}),
+        ],
+    },
+    {
+        "domanda": "Cosa ti motiva davvero a lottare fino alla fine?",
+        "opzioni": [
+            ("Dimostrare che chi sembra debole può sorprendere tutti", {"Distretto 7": 1}),
+            ("Il desiderio di tornare a creare qualcosa di mio", {"Distretto 8": 1}),
+            ("Le persone della mia comunità che contano su di me", {"Distretto 11": 1}),
+            ("Le persone a cui voglio bene, a casa", {"Distretto 12": 1}),
+        ],
+    },
+    {
+        "domanda": "Come scegli i tuoi alleati?",
+        "opzioni": [
+            ("Cerco chi può portarmi un vantaggio concreto", {"Distretto 1": 1}),
+            ("Valuto con attenzione chi ha competenze complementari alle mie", {"Distretto 3": 1}),
+            ("Mi fido raramente: preferisco contare soprattutto su me stesso", {"Distretto 5": 1}),
+            ("Cerco chi condivide la mia stessa pazienza e lealtà", {"Distretto 8": 1}),
+        ],
+    },
+    {
+        "domanda": "Qual è il tuo rapporto con le regole imposte dall'alto?",
+        "opzioni": [
+            ("Le seguo con disciplina: mi sono allenato per questo", {"Distretto 2": 1}),
+            ("Le rispetto, ma so adattarmi se la situazione cambia", {"Distretto 4": 1}),
+            ("Le aggiro silenziosamente, senza farmi notare", {"Distretto 7": 1}),
+            ("Le rispetto se proteggono la mia comunità, altrimenti no", {"Distretto 11": 1}),
+        ],
+    },
+    {
+        "domanda": "Se sopravvivessi ai Giochi, cosa faresti per primo?",
+        "opzioni": [
+            ("Proteggerei chi amo, più fermamente di prima", {"Distretto 12": 1}),
+            ("Godrei del riconoscimento che ho conquistato", {"Distretto 1": 1}),
+            ("Cercherei un posto tranquillo, lontano dai riflettori", {"Distretto 5": 1}),
+            ("Tornerei a creare qualcosa di bello con le mie mani", {"Distretto 8": 1}),
+        ],
+    },
+]
+
+
+
+# ============================================================
 # CSS GLOBALE — sfondo condiviso + due identità tipografiche
 # (pergamena/Hogwarts e marmo/Olimpo)
 # ============================================================
 st.markdown(
     textwrap.dedent("""\
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cinzel+Decorative:wght@700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IM+Fell+English:ital@0;1&family=Lora:ital,wght@0,500;1,500&family=IBM+Plex+Mono:wght@500&family=Barlow+Condensed:wght@600;700&family=Barlow:ital,wght@0,400;1,400&family=Philosopher:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cinzel+Decorative:wght@700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IM+Fell+English:ital@0;1&family=Lora:ital,wght@0,500;1,500&family=IBM+Plex+Mono:wght@500&family=Barlow+Condensed:wght@600;700&family=Barlow:ital,wght@0,400;1,400&family=Philosopher:wght@700&family=Bebas+Neue&family=Crimson+Text:ital@0;1&display=swap');
 
     html, body, [class*="css"] { font-family: 'EB Garamond', serif; }
 
@@ -866,6 +1113,78 @@ st.markdown(
         text-transform: uppercase;
         margin-top: -4px;
         margin-bottom: 0.6rem;
+    }
+
+    .arena-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 3.2rem;
+        text-align: center;
+        letter-spacing: 3px;
+        color: #e0995c;
+        text-shadow: 0 0 22px rgba(224,153,92,0.4), 0 2px 4px rgba(0,0,0,0.6);
+        margin-bottom: 0;
+    }
+    .arena-subtitle {
+        font-family: 'Crimson Text', serif;
+        font-style: italic;
+        text-align: center;
+        color: #9fae95;
+        font-size: 1.05rem;
+        margin-top: -6px;
+        margin-bottom: 1.4rem;
+        letter-spacing: 0.3px;
+    }
+    .canvas {
+        background:
+            radial-gradient(circle at 20% 20%, rgba(90,110,70,0.35), transparent 45%),
+            radial-gradient(circle at 80% 70%, rgba(60,50,30,0.4), transparent 50%),
+            linear-gradient(135deg, #3a4230 0%, #2c3322 50%, #241f16 100%);
+        border: 1px solid #6b7a4a;
+        outline: 6px solid #120d08;
+        outline-offset: -12px;
+        border-radius: 2px;
+        padding: 2rem 2.2rem;
+        box-shadow: 0 15px 45px rgba(0,0,0,0.6), inset 0 0 45px rgba(0,0,0,0.4);
+        color: #e6e4d4;
+        margin-bottom: 1.4rem;
+    }
+    .canvas h3 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+        color: #e0995c;
+        border-bottom: 1px solid #6b7a4a;
+        padding-bottom: 8px;
+        margin-top: 0;
+    }
+    .qcounter.arena {
+        font-family: 'IBM Plex Mono', monospace;
+        font-style: normal;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        color: #9fae95;
+    }
+    .result-house.arena {
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: 3px;
+        font-size: 2.6rem;
+    }
+    .result-desc.arena {
+        font-family: 'Crimson Text', serif;
+        font-style: italic;
+    }
+    .fact-label.arena {
+        font-family: 'IBM Plex Mono', monospace;
+        font-style: normal;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+    }
+    .menu-card-title.arena {
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: 2px;
+        font-size: 1.5rem;
     }
 
     div.stButton > button {
@@ -1240,6 +1559,60 @@ def render_faction_wheel():
     st.markdown(svg_code, unsafe_allow_html=True)
 
 
+def render_arena_background():
+    st.markdown(
+        textwrap.dedent("""\
+        <style>
+        .stApp {
+            background:
+                radial-gradient(ellipse at top, rgba(224,153,92,0.14), transparent 50%),
+                radial-gradient(ellipse at bottom left, rgba(60,80,45,0.35), transparent 55%),
+                linear-gradient(180deg, #0c0f08 0%, #161d10 45%, #0c0f08 100%) !important;
+            background-attachment: fixed !important;
+        }
+        </style>
+        """),
+        unsafe_allow_html=True,
+    )
+
+
+def render_arena_compass():
+    svg_code = textwrap.dedent("""\
+    <div style="display:flex; justify-content:center; margin: 0.4rem 0 1.6rem;">
+    <svg width="190" height="190" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+    <radialGradient id="glow4" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#e0995c" stop-opacity="0.9"/>
+    <stop offset="100%" stop-color="#e0995c" stop-opacity="0"/>
+    </radialGradient>
+    </defs>
+    <g style="animation: arena-rotate 40s linear infinite; transform-origin: 100px 100px;">
+    <circle cx="100" cy="100" r="88" fill="none" stroke="#6b7a4a" stroke-width="1.5" opacity="0.6"/>
+    <g stroke="#6b7a4a" stroke-width="1.5" opacity="0.7">
+    <line x1="100" y1="12" x2="100" y2="26"/>
+    <line x1="100" y1="174" x2="100" y2="188"/>
+    <line x1="12" y1="100" x2="26" y2="100"/>
+    <line x1="174" y1="100" x2="188" y2="100"/>
+    <line x1="37.6" y1="37.6" x2="47.5" y2="47.5"/>
+    <line x1="152.5" y1="152.5" x2="162.4" y2="162.4"/>
+    <line x1="37.6" y1="162.4" x2="47.5" y2="152.5"/>
+    <line x1="152.5" y1="47.5" x2="162.4" y2="37.6"/>
+    </g>
+    </g>
+    <circle cx="100" cy="100" r="34" fill="url(#glow4)">
+    <animate attributeName="r" values="30;36;30" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="100" cy="100" r="24" fill="#0c0f08" stroke="#e0995c" stroke-width="2"/>
+    <path d="M100,84 L104,98 L118,100 L104,102 L100,116 L96,102 L82,100 L96,98 Z" fill="#e0995c"/>
+    </svg>
+    </div>
+    <style>
+    @keyframes arena-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+    """)
+    st.markdown(svg_code, unsafe_allow_html=True)
+
+
 # ============================================================
 # EFFETTO MACCHINA DA SCRIVERE per il testo della domanda
 # (due varianti estetiche: pergamena e marmo)
@@ -1271,7 +1644,7 @@ def render_typewriter_question(testo, stile="pergamena"):
         font_family = "'Cinzel', serif"
         text_transform = "uppercase"
         letter_spacing = "0.5px"
-    else:
+    elif stile == "acciaio":
         box_bg = """
             repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 14px),
             linear-gradient(135deg, #2b3238 0%, #3a434b 50%, #4a555e 100%)"""
@@ -1281,6 +1654,17 @@ def render_typewriter_question(testo, stile="pergamena"):
         font_family = "'Barlow Condensed', sans-serif"
         text_transform = "uppercase"
         letter_spacing = "1px"
+    else:
+        box_bg = """
+            radial-gradient(circle at 20% 20%, rgba(90,110,70,0.35), transparent 45%),
+            radial-gradient(circle at 80% 70%, rgba(60,50,30,0.4), transparent 50%),
+            linear-gradient(135deg, #3a4230 0%, #2c3322 50%, #241f16 100%)"""
+        border_color = "#6b7a4a"
+        text_color = "#e6e4d4"
+        font_import = "Bebas+Neue"
+        font_family = "'Bebas Neue', sans-serif"
+        text_transform = "none"
+        letter_spacing = "0.5px"
 
     html_code = f"""
     <html>
@@ -1351,6 +1735,7 @@ def carica_font():
         "titolo_hp": "https://github.com/google/fonts/raw/main/ofl/cinzeldecorative/CinzelDecorative-Bold.ttf",
         "titolo_pj": "https://github.com/google/fonts/raw/main/ofl/cinzel/Cinzel[wght].ttf",
         "titolo_div": "https://github.com/google/fonts/raw/main/ofl/barlowcondensed/BarlowCondensed-Bold.ttf",
+        "titolo_hg": "https://github.com/google/fonts/raw/main/ofl/bebasneue/BebasNeue-Regular.ttf",
         "corpo": "https://github.com/google/fonts/raw/main/ofl/ebgaramond/EBGaramond-Regular.ttf",
         "corsivo": "https://github.com/google/fonts/raw/main/ofl/ebgaramond/EBGaramond-Italic.ttf",
     }
@@ -1851,6 +2236,125 @@ def render_divergent():
 
 
 # ============================================================
+# QUIZ 4 — A QUALE DISTRETTO APPARTIENI?
+# ============================================================
+def render_hunger_games():
+    prefix = "hg"
+    init_state(prefix, DISTRICTS)
+    if f"{prefix}_ordine" not in st.session_state:
+        st.session_state[f"{prefix}_ordine"] = list(range(len(QUESTIONS_HG)))
+        random.shuffle(st.session_state[f"{prefix}_ordine"])
+
+    if st.button("← Torna al menu"):
+        st.session_state.pagina = "menu"
+        st.rerun()
+
+    render_arena_background()
+
+    st.markdown('<div class="arena-title">A quale Distretto appartieni?</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="arena-subtitle">"Che le probabilità siano sempre a tuo favore... ma chi sei, davvero, quando la sopravvivenza è in gioco?"</div>',
+        unsafe_allow_html=True,
+    )
+
+    if not st.session_state[f"{prefix}_iniziato"]:
+        render_arena_compass()
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="canvas">
+            <h3>Prima della Mietitura</h3>
+            Rispondi con sincerità a 12 situazioni ispirate all'arena e a Panem.
+            Non esistono risposte giuste o sbagliate: la vera natura viene sempre
+            a galla quando tutto è in gioco. Alla fine scoprirai a quale distretto
+            apparterresti, con il tuo profilo completo — e potrai scaricare la tua
+            card da condividere.
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("🔥 Affronta la Mietitura", use_container_width=True):
+            st.session_state[f"{prefix}_iniziato"] = True
+            st.rerun()
+
+    elif not st.session_state[f"{prefix}_finito"]:
+        idx = st.session_state[f"{prefix}_ordine"][st.session_state[f"{prefix}_domanda"]]
+        domanda = QUESTIONS_HG[idx]
+
+        st.markdown(
+            f'<div class="qcounter arena">Domanda {st.session_state[f"{prefix}_domanda"] + 1} di {len(QUESTIONS_HG)}</div>',
+            unsafe_allow_html=True,
+        )
+        st.progress(st.session_state[f"{prefix}_domanda"] / len(QUESTIONS_HG))
+        render_typewriter_question(domanda["domanda"], stile="arena")
+
+        opzioni = list(domanda["opzioni"])
+        random.Random(idx + 400).shuffle(opzioni)
+        for testo_opzione, punti in opzioni:
+            if st.button(testo_opzione, key=f"{prefix}_{idx}_{testo_opzione}"):
+                rispondi(prefix, QUESTIONS_HG, punti)
+                st.rerun()
+
+    else:
+        punteggi = st.session_state[f"{prefix}_punteggi"]
+        vincitore = max(punteggi, key=punteggi.get)
+        info = DISTRICTS[vincitore]
+
+        st.balloons()
+
+        dettagli_html = "".join(
+            f'<div class="fact-item"><span class="fact-label arena">{label}</span><span class="fact-value">{valore}</span></div>'
+            for label, valore in info["dettagli"]
+        )
+
+        st.markdown(
+            textwrap.dedent(f"""\
+            <div class="result-card" style="background:{info['gradiente']};">
+            <div style="font-size:3.2rem;">{info['emoji']}</div>
+            <div class="result-house arena">{vincitore}</div>
+            <div class="result-desc arena">{info['descrizione']}</div>
+            <div class="fact-grid">{dettagli_html}</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+
+        st.write("")
+        with st.spinner("Sto preparando la tua card da condividere..."):
+            buf = genera_immagine_condivisione(
+                vincitore, info,
+                "LA MIETITURA HA PARLATO: APPARTIENI AL",
+                "A QUALE DISTRETTO APPARTIENI?",
+                titolo_font_key="titolo_hg",
+            )
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.image(buf, use_container_width=True)
+        with col2:
+            st.write("")
+            st.write("Scarica la tua card e condividila dove vuoi.")
+            st.download_button(
+                "📥 Scarica la card", data=buf,
+                file_name=f"{vincitore.lower().replace(' ', '_')}.png",
+                mime="image/png", use_container_width=True,
+            )
+
+        st.write("")
+        st.markdown('<div class="canvas"><h3>Il tuo profilo tra i distretti</h3></div>', unsafe_allow_html=True)
+        distretti = list(DISTRICTS.keys())
+        render_radar(distretti, [punteggi[d] for d in distretti])
+
+        for distretto, punti in sorted(punteggi.items(), key=lambda x: -x[1]):
+            pct = punti / len(QUESTIONS_HG)
+            st.write(f"{DISTRICTS[distretto]['emoji']} **{distretto}** — {punti:g} punti")
+            st.progress(min(pct, 1.0))
+
+        st.write("")
+        if st.button("🔄 Rifai la Mietitura", use_container_width=True):
+            reset_quiz(prefix, DISTRICTS, QUESTIONS_HG)
+            st.rerun()
+
+
+# ============================================================
 # MENU INIZIALE
 # ============================================================
 def render_menu():
@@ -1862,7 +2366,7 @@ def render_menu():
     )
     render_nexus_emblem()
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     with col1:
         st.markdown(
@@ -1894,6 +2398,8 @@ def render_menu():
             st.session_state.pagina = "percy"
             st.rerun()
 
+    col3, col4 = st.columns(2)
+
     with col3:
         st.markdown(
             textwrap.dedent("""\
@@ -1907,6 +2413,21 @@ def render_menu():
         )
         if st.button("Affronta la Scelta", key="entra_div", use_container_width=True):
             st.session_state.pagina = "divergent"
+            st.rerun()
+
+    with col4:
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="menu-card" style="background:linear-gradient(160deg, #241f16 0%, #2c3322 100%);">
+            <div class="menu-card-icon">🔥</div>
+            <div class="menu-card-title arena">A quale Distretto appartieni?</div>
+            <div class="menu-card-desc">Scopri come sopravviveresti nell'arena di Panem</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("Affronta la Mietitura", key="entra_hg", use_container_width=True):
+            st.session_state.pagina = "hunger"
             st.rerun()
 
 
@@ -1924,3 +2445,5 @@ elif st.session_state.pagina == "percy":
     render_percy()
 elif st.session_state.pagina == "divergent":
     render_divergent()
+elif st.session_state.pagina == "hunger":
+    render_hunger_games()
