@@ -7,6 +7,7 @@ import re
 import html
 import textwrap
 import requests
+import datetime
 import plotly.graph_objects as go
 from PIL import Image, ImageDraw, ImageFont
 
@@ -3050,6 +3051,215 @@ def render_mappe():
 
 
 # ============================================================
+# STRUMENTO 4 — OROSCOPO DEL GIORNO
+# ============================================================
+PROPHECY_TEMPLATES = [
+    "Oggi la qualità che ti guiderà è: {tratto}. Seguila senza esitare.",
+    "Il simbolo di {simbolo} veglia su di te oggi: aspettati un piccolo segno a tuo favore.",
+    "Una conversazione oggi metterà alla prova questa tua dote: {tratto}.",
+    "I colori {colori} ti porteranno fortuna in un momento inaspettato della giornata.",
+    "Qualcuno vicino a te ha bisogno esattamente di questo, da parte tua: {tratto}.",
+    "La giornata premia le decisioni coraggiose: lasciati guidare dallo spirito di {simbolo}.",
+    "Un momento di silenzio oggi ti rivelerà qualcosa di importante sul tuo cammino.",
+    "Oggi si apre una porta grazie a questa tua qualità: {tratto}.",
+    "Attenzione all'eccesso di sicurezza oggi: mantieni l'equilibrio con {tratto}.",
+    "L'universo premia chi, come te, dà valore soprattutto a questo: {tratto}.",
+    "Le prossime ore favoriscono chi, come te, non dimentica mai: {tratto}.",
+    "Oggi {simbolo} ti ricorda una verità che avevi messo da parte.",
+]
+
+
+def trova_dettaglio(info, chiave_contains):
+    for label, valore in info["dettagli"]:
+        if chiave_contains.lower() in label.lower():
+            return valore
+    return ""
+
+
+def genera_profezia(nome_entita, info, mondo):
+    oggi = datetime.date.today().isoformat()
+    rng = random.Random(f"{oggi}-{mondo}-{nome_entita}")
+
+    valori_raw = trova_dettaglio(info, "valor")
+    simbolo_raw = trova_dettaglio(info, "simbolo") or trova_dettaglio(info, "animale")
+    colori_raw = trova_dettaglio(info, "colori")
+
+    tratto = rng.choice([v.strip() for v in valori_raw.split(",")]) if valori_raw else "il tuo istinto"
+    simbolo = simbolo_raw.split(",")[0].strip() if simbolo_raw else nome_entita
+    colori = colori_raw.lower() if colori_raw else "i tuoi colori"
+
+    template = rng.choice(PROPHECY_TEMPLATES)
+    return template.format(tratto=tratto.lower(), simbolo=simbolo, colori=colori)
+
+
+MONDO_ENTITA = {"hogwarts": HOUSES, "percy": GODS, "divergent": DIVERGENT, "hunger": DISTRICTS}
+MONDO_MODIFICATORE = {"hogwarts": "", "percy": "oly", "divergent": "steel", "hunger": "arena"}
+MONDO_SFONDO = {
+    "hogwarts": None,
+    "percy": render_light_background,
+    "divergent": render_steel_background,
+    "hunger": render_arena_background,
+}
+MONDO_EMBLEMA = {
+    "hogwarts": render_crest,
+    "percy": render_olympus_emblem,
+    "divergent": render_faction_wheel,
+    "hunger": render_arena_compass,
+}
+
+
+def render_oroscopo():
+    if st.button("← Torna al menu"):
+        st.session_state.pagina = "menu"
+        st.session_state.pop("oroscopo_mondo", None)
+        st.rerun()
+
+    st.markdown('<div class="nexus-title" style="font-size:2.2rem;">📜 Oroscopo del Giorno</div>', unsafe_allow_html=True)
+    st.markdown('<div class="nexus-subtitle">Scegli un mondo e scopri cosa ti riserva oggi</div>', unsafe_allow_html=True)
+
+    mondo = st.session_state.get("oroscopo_mondo")
+    if not mondo:
+        render_selettore_mondo("oroscopo_mondo")
+        return
+
+    if MONDO_SFONDO[mondo]:
+        MONDO_SFONDO[mondo]()
+
+    entita = MONDO_ENTITA[mondo]
+    modificatore = MONDO_MODIFICATORE[mondo]
+
+    MONDO_EMBLEMA[mondo]()
+
+    nomi = list(entita.keys())
+    scelto = st.selectbox("Qual è la tua affiliazione?", nomi)
+    info = entita[scelto]
+
+    profezia = genera_profezia(scelto, info, mondo)
+    oggi_str = datetime.date.today().strftime("%d/%m/%Y")
+
+    classe_house = f"result-house {modificatore}".strip()
+    classe_desc = f"result-desc {modificatore}".strip()
+
+    st.markdown(
+        textwrap.dedent(f"""\
+        <div class="result-card" style="background:{info['gradiente']};">
+        <div style="font-size:2.4rem;">{info['emoji']}</div>
+        <div class="{classe_house}">{scelto}</div>
+        <div class="{classe_desc}">{profezia}</div>
+        </div>
+        """),
+        unsafe_allow_html=True,
+    )
+    st.caption(f"🕐 Profezia del {oggi_str} — torna domani per una nuova visione.")
+
+    st.write("")
+    if st.button("🔄 Cambia mondo", use_container_width=True):
+        st.session_state.pop("oroscopo_mondo", None)
+        st.rerun()
+
+
+# ============================================================
+# STRUMENTO 5 — MEMORY DEI MONDI
+# ============================================================
+MEMORY_KEYS = ["mem_mazzo", "mem_rivelate", "mem_risolte", "mem_mosse", "mem_attesa"]
+
+
+def reset_memory():
+    for k in MEMORY_KEYS:
+        st.session_state.pop(k, None)
+
+
+def render_memory():
+    if st.button("← Torna al menu"):
+        st.session_state.pagina = "menu"
+        st.session_state.pop("memory_mondo", None)
+        reset_memory()
+        st.rerun()
+
+    st.markdown('<div class="nexus-title" style="font-size:2.2rem;">🧩 Memory dei Mondi</div>', unsafe_allow_html=True)
+    st.markdown('<div class="nexus-subtitle">Scegli un mondo e trova tutte le coppie</div>', unsafe_allow_html=True)
+
+    mondo = st.session_state.get("memory_mondo")
+    if not mondo:
+        render_selettore_mondo("memory_mondo")
+        return
+
+    if MONDO_SFONDO[mondo]:
+        MONDO_SFONDO[mondo]()
+
+    entita = MONDO_ENTITA[mondo]
+
+    if "mem_mazzo" not in st.session_state:
+        mazzo = list(entita.items()) * 2
+        random.shuffle(mazzo)
+        st.session_state.mem_mazzo = mazzo
+        st.session_state.mem_rivelate = []
+        st.session_state.mem_risolte = []
+        st.session_state.mem_mosse = 0
+        st.session_state.mem_attesa = False
+
+    mazzo = st.session_state.mem_mazzo
+    rivelate = st.session_state.mem_rivelate
+    risolte = st.session_state.mem_risolte
+    totale_coppie = len(mazzo) // 2
+
+    st.markdown(
+        f'<div class="qcounter">Coppie trovate: {len(risolte) // 2} / {totale_coppie} — Mosse: {st.session_state.mem_mosse}</div>',
+        unsafe_allow_html=True,
+    )
+
+    if st.session_state.mem_attesa:
+        st.info("Non è una coppia! Osserva bene le carte prima di continuare...")
+        if st.button("Continua ➜", use_container_width=True):
+            st.session_state.mem_rivelate = []
+            st.session_state.mem_attesa = False
+            st.rerun()
+
+    colonne_per_riga = 4
+    righe = -(-len(mazzo) // colonne_per_riga)
+    idx = 0
+    for _ in range(righe):
+        cols = st.columns(colonne_per_riga)
+        for c in cols:
+            if idx >= len(mazzo):
+                break
+            nome, info = mazzo[idx]
+            with c:
+                if idx in risolte or idx in rivelate:
+                    st.button(f"{info['emoji']} {nome}", key=f"mem_card_{idx}", disabled=True, use_container_width=True)
+                else:
+                    cliccato = st.button(
+                        "🎴", key=f"mem_card_{idx}", use_container_width=True,
+                        disabled=st.session_state.mem_attesa,
+                    )
+                    if cliccato:
+                        rivelate.append(idx)
+                        if len(rivelate) == 2:
+                            st.session_state.mem_mosse += 1
+                            i1, i2 = rivelate
+                            if mazzo[i1][0] == mazzo[i2][0]:
+                                risolte.extend(rivelate)
+                                st.session_state.mem_rivelate = []
+                            else:
+                                st.session_state.mem_attesa = True
+                        st.rerun()
+            idx += 1
+
+    if len(risolte) == len(mazzo):
+        st.balloons()
+        st.success(f"🎉 Hai completato il Memory in {st.session_state.mem_mosse} mosse!")
+        if st.button("🔄 Rigioca", use_container_width=True):
+            reset_memory()
+            st.rerun()
+
+    st.write("")
+    if st.button("🔄 Cambia mondo", use_container_width=True):
+        st.session_state.pop("memory_mondo", None)
+        reset_memory()
+        st.rerun()
+
+
+# ============================================================
 # MENU INIZIALE
 # ============================================================
 def render_menu():
@@ -3178,6 +3388,38 @@ def render_menu():
             st.session_state.pagina = "mappe"
             st.rerun()
 
+    col8, col9 = st.columns(2)
+
+    with col8:
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="menu-card" style="background:linear-gradient(160deg, #3a2a05 0%, #0e2233 100%);">
+            <div class="menu-card-icon">📜</div>
+            <div class="menu-card-title">Oroscopo del Giorno</div>
+            <div class="menu-card-desc">Scopri cosa ti riserva oggi la tua affiliazione</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("Leggi la profezia", key="entra_oroscopo", use_container_width=True):
+            st.session_state.pagina = "oroscopo"
+            st.rerun()
+
+    with col9:
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="menu-card" style="background:linear-gradient(160deg, #1a2f14 0%, #2b3238 100%);">
+            <div class="menu-card-icon">🧩</div>
+            <div class="menu-card-title">Memory dei Mondi</div>
+            <div class="menu-card-desc">Metti alla prova la memoria con le carte di ogni mondo</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("Gioca a Memory", key="entra_memory", use_container_width=True):
+            st.session_state.pagina = "memory"
+            st.rerun()
+
 
 # ============================================================
 # NAVIGAZIONE PRINCIPALE
@@ -3201,3 +3443,7 @@ elif st.session_state.pagina == "survival":
     render_survival()
 elif st.session_state.pagina == "mappe":
     render_mappe()
+elif st.session_state.pagina == "oroscopo":
+    render_oroscopo()
+elif st.session_state.pagina == "memory":
+    render_memory()
