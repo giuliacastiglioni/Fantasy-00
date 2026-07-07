@@ -1793,28 +1793,43 @@ def genera_immagine_condivisione(nome_entita, info, eyebrow_text, footer_text, t
     testo_centrato(eyebrow_text, 165, f_eyebrow, (255, 255, 255))
     testo_centrato(nome_entita.upper(), 225, f_titolo, (255, 255, 255))
 
-    testo_avvolto = textwrap.fill(info["descrizione"], width=42)
+    testo_avvolto = textwrap.fill(info["descrizione"], width=46)
     y_desc = 410
     for riga in testo_avvolto.split("\n"):
         testo_centrato(riga, y_desc, f_desc, (255, 255, 255))
         y_desc += 46
 
     dettagli = info["dettagli"][:4]
-    padding_box = 24
-    row_h = 58
-    box_h = padding_box * 2 + row_h * len(dettagli)
+    padding_box = 22
+    gap_label_valore = 6
+    gap_tra_righe = 16
+
+    def altezza_testo(testo, font):
+        bbox = draw.textbbox((0, 0), testo, font=font)
+        return bbox[3] - bbox[1]
+
+    altezze_righe = []
+    for label, valore in dettagli:
+        h = altezza_testo(label.upper(), f_footer) + gap_label_valore + altezza_testo(valore, f_desc)
+        altezze_righe.append(h)
+
+    box_h = padding_box * 2 + sum(altezze_righe) + gap_tra_righe * (len(dettagli) - 1)
     y_box = y_desc + 60
     draw.rectangle([120, y_box, W - 120, y_box + box_h], outline=(255, 255, 255, 150), width=2)
+
+    y_cursor = y_box + padding_box
     for i, (label, valore) in enumerate(dettagli):
-        y_row = y_box + padding_box + i * row_h
-        draw.text((150, y_row), label.upper(), font=f_footer, fill=(255, 255, 255, 200))
-        draw.text((150, y_row + 28), valore, font=f_desc, fill=(255, 255, 255))
+        draw.text((150, y_cursor), label.upper(), font=f_footer, fill=(255, 255, 255, 200))
+        y_valore = y_cursor + altezza_testo(label.upper(), f_footer) + gap_label_valore
+        draw.text((150, y_valore), valore, font=f_desc, fill=(255, 255, 255))
+        y_fine_riga = y_valore + altezza_testo(valore, f_desc)
         if i < len(dettagli) - 1:
-            y_line = y_row + row_h - 8
+            y_line = y_fine_riga + gap_tra_righe / 2
             draw.line(
                 [(150, y_line), (W - 150, y_line)],
                 fill=(255, 255, 255, 60), width=1,
             )
+        y_cursor = y_fine_riga + gap_tra_righe
 
     testo_centrato(footer_text, H - 110, f_footer, (255, 255, 255))
 
