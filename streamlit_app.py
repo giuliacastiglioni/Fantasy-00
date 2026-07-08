@@ -3543,6 +3543,621 @@ def render_tarocchi():
 
 
 # ============================================================
+# STRUMENTO 7 — QUAL È IL TUO ANIMALE GUIDA?
+# Quiz dedicato (non assegnazione casuale) per ciascun mondo,
+# con un bestiario di 8 animali/creature originali per mondo.
+# Riusa lo stesso motore generico dei quattro quiz principali.
+# ============================================================
+ANIMALI_HOGWARTS = {
+    "Cervo": {
+        "gradiente": "linear-gradient(135deg, #3a2a0a 0%, #7a5c1a 50%, #c89646 100%)",
+        "rgb_top": (58, 42, 10), "rgb_bottom": (200, 150, 70), "emoji": "🦌",
+        "descrizione": "Ti muovi con calma regale, capace di guidare gli altri senza bisogno di alzare la voce. La tua sola presenza rassicura chi ti sta vicino.",
+        "dettagli": [("Tratto principale", "Guida silenziosa"), ("Ambiente", "Radure e boschi aperti"),
+                     ("Energia", "Calma, protettiva"), ("Ti somiglia se", "Sei il punto fermo del tuo gruppo")],
+    },
+    "Lontra": {
+        "gradiente": "linear-gradient(135deg, #063a3a 0%, #157a7a 50%, #6ec6c6 100%)",
+        "rgb_top": (6, 58, 58), "rgb_bottom": (110, 198, 198), "emoji": "🦦",
+        "descrizione": "Affronti la vita con leggerezza e affetto sincero. Sai essere serio quando serve, ma preferisci sempre lasciare spazio al gioco e al calore umano.",
+        "dettagli": [("Tratto principale", "Calore e giocosità"), ("Ambiente", "Fiumi e laghi"),
+                     ("Energia", "Sociale, affettuosa"), ("Ti somiglia se", "Metti sempre a proprio agio chi hai intorno")],
+    },
+    "Fenice": {
+        "gradiente": "linear-gradient(135deg, #3a0a04 0%, #8a2a0a 50%, #e67828 100%)",
+        "rgb_top": (58, 10, 4), "rgb_bottom": (230, 120, 40), "emoji": "🔥",
+        "descrizione": "Sai rialzarti da ogni caduta, spesso più forte di prima. Le difficoltà non ti spezzano: ti trasformano.",
+        "dettagli": [("Tratto principale", "Rinascita"), ("Ambiente", "Ovunque serva speranza"),
+                     ("Energia", "Trasformativa, luminosa"), ("Ti somiglia se", "Hai già ricominciato più volte, e ce l'hai sempre fatta")],
+    },
+    "Lupo": {
+        "gradiente": "linear-gradient(135deg, #141824 0%, #3a4258 50%, #5a6478 100%)",
+        "rgb_top": (20, 24, 36), "rgb_bottom": (90, 100, 120), "emoji": "🐺",
+        "descrizione": "La lealtà verso chi ami è la tua bussola. Proteggi il tuo branco con un istinto che non conosce compromessi.",
+        "dettagli": [("Tratto principale", "Lealtà feroce"), ("Ambiente", "Foreste profonde"),
+                     ("Energia", "Protettiva, istintiva"), ("Ti somiglia se", "Difenderesti chi ami senza pensarci due volte")],
+    },
+    "Volpe": {
+        "gradiente": "linear-gradient(135deg, #3a1a06 0%, #8a4a12 50%, #d67832 100%)",
+        "rgb_top": (58, 26, 6), "rgb_bottom": (214, 120, 50), "emoji": "🦊",
+        "descrizione": "Sei più intelligente di quanto lasci intuire, e sai usarlo a tuo vantaggio senza mai essere scorretto. L'ingegno è la tua arma migliore.",
+        "dettagli": [("Tratto principale", "Astuzia pratica"), ("Ambiente", "Ai margini, dove nessuno guarda"),
+                     ("Energia", "Sveglia, adattabile"), ("Ti somiglia se", "Trovi sempre una soluzione creativa")],
+    },
+    "Civetta": {
+        "gradiente": "linear-gradient(135deg, #0a0e24 0%, #2a3268 50%, #46508c 100%)",
+        "rgb_top": (10, 14, 36), "rgb_bottom": (70, 80, 140), "emoji": "🦉",
+        "descrizione": "Osservi prima di parlare, e quando parli conta davvero. Il sapere, per te, è uno strumento silenzioso ma potente.",
+        "dettagli": [("Tratto principale", "Saggezza osservante"), ("Ambiente", "Biblioteche e cieli notturni"),
+                     ("Energia", "Riflessiva, paziente"), ("Ti somiglia se", "Preferisci capire a fondo prima di agire")],
+    },
+    "Lepre": {
+        "gradiente": "linear-gradient(135deg, #3a3218 0%, #8a7848 50%, #d6c496 100%)",
+        "rgb_top": (58, 50, 24), "rgb_bottom": (214, 196, 150), "emoji": "🐇",
+        "descrizione": "Percepisci i cambiamenti prima degli altri e sai reagire in un istante. La tua prontezza ti ha salvato più di una volta.",
+        "dettagli": [("Tratto principale", "Prontezza istintiva"), ("Ambiente", "Campi aperti"),
+                     ("Energia", "Rapida, vigile"), ("Ti somiglia se", "Noti i segnali che gli altri si perdono")],
+    },
+    "Corvo Imperiale": {
+        "gradiente": "linear-gradient(135deg, #0a0810 0%, #2a2438 50%, #3c3248 100%)",
+        "rgb_top": (10, 8, 16), "rgb_bottom": (60, 50, 72), "emoji": "🐦",
+        "descrizione": "Vedi connessioni che altri non notano, e la tua mente lavora spesso più veloce delle parole. Un po' enigmatico, sempre un passo avanti.",
+        "dettagli": [("Tratto principale", "Intuito acuto"), ("Ambiente", "Torri e luoghi elevati"),
+                     ("Energia", "Enigmatica, indipendente"), ("Ti somiglia se", "Capisci le cose prima che vengano spiegate")],
+    },
+}
+
+QUESTIONS_ANIMALE_HP = [
+    {"domanda": "Un amico attraversa un momento difficile. Come lo aiuti?", "opzioni": [
+        ("Resto semplicemente al suo fianco, con calma: la mia presenza basta a farlo sentire meno solo", {"Cervo": 1}),
+        ("Cerco di strappargli un sorriso, anche nei momenti bui: l'affetto leggero cura più di mille parole serie", {"Lontra": 1}),
+        ("Gli ricordo che ne è già uscito prima, e che può rinascere anche da questo", {"Fenice": 1}),
+        ("Mi schiero al suo fianco senza esitazione, pronto a proteggerlo da chiunque gli faccia del male", {"Lupo": 1}),
+    ]},
+    {"domanda": "Ti trovi davanti a un problema complicato senza soluzione ovvia. Cosa fai?", "opzioni": [
+        ("Cerco un modo creativo e un po' furbo per aggirarlo", {"Volpe": 1}),
+        ("Mi fermo a osservare e studiare la situazione, prima di muovermi", {"Civetta": 1}),
+        ("Reagisco d'istinto, cogliendo l'apertura nel momento in cui appare", {"Lepre": 1}),
+        ("Noto un collegamento nascosto che nessun altro aveva visto", {"Corvo Imperiale": 1}),
+    ]},
+    {"domanda": "Il tuo gruppo deve prendere una decisione importante. Qual è il tuo ruolo?", "opzioni": [
+        ("Sono quello che riporta la calma e guida senza imporsi", {"Cervo": 1}),
+        ("Trovo la soluzione più intelligente, anche se non è la più ovvia", {"Volpe": 1}),
+        ("Analizzo ogni opzione con attenzione prima di esprimermi", {"Civetta": 1}),
+        ("Difendo con forza la scelta che protegge di più le persone a cui teniamo", {"Lupo": 1}),
+    ]},
+    {"domanda": "Cosa ti fa sentire più vivo?", "opzioni": [
+        ("Ridere con le persone a cui voglio bene, senza pensare a nient'altro", {"Lontra": 1}),
+        ("Ricominciare da capo dopo un periodo difficile, più forte di prima", {"Fenice": 1}),
+        ("Un'improvvisa scarica di adrenalina, quando serve reagire in fretta", {"Lepre": 1}),
+        ("Capire qualcosa che nessun altro aveva ancora notato", {"Corvo Imperiale": 1}),
+    ]},
+    {"domanda": "Qual è, secondo te, la vera forma di forza?", "opzioni": [
+        ("La capacità di restare saldo mentre tutto intorno cambia", {"Cervo": 1}),
+        ("Il coraggio di restare gentili anche quando sarebbe più facile non esserlo", {"Lontra": 1}),
+        ("L'intelligenza di trovare sempre una via d'uscita", {"Volpe": 1}),
+        ("La lucidità di vedere ciò che gli altri non notano", {"Corvo Imperiale": 1}),
+    ]},
+    {"domanda": "Hai subito una delusione importante. Come reagisci nei giorni successivi?", "opzioni": [
+        ("La uso come punto di partenza per reinventarmi", {"Fenice": 1}),
+        ("Mi stringo ancora di più alle persone di cui mi fido", {"Lupo": 1}),
+        ("Ci rifletto a lungo prima di decidere come muovermi", {"Civetta": 1}),
+        ("Reagisco in fretta, cercando subito il prossimo passo da fare", {"Lepre": 1}),
+    ]},
+    {"domanda": "Cosa cercano gli altri in te, secondo te?", "opzioni": [
+        ("Un punto di riferimento stabile", {"Cervo": 1}),
+        ("Speranza, anche nei momenti più bui", {"Fenice": 1}),
+        ("Una soluzione intelligente che nessun altro aveva pensato", {"Volpe": 1}),
+        ("Qualcuno che sappia reagire in fretta quando serve", {"Lepre": 1}),
+    ]},
+    {"domanda": "Come ti comporti con le persone che ami?", "opzioni": [
+        ("Con affetto costante, giocoso, mai formale", {"Lontra": 1}),
+        ("Con una lealtà che non vacilla mai, qualunque cosa succeda", {"Lupo": 1}),
+        ("Con attenzione silenziosa, notando ciò di cui hanno davvero bisogno", {"Civetta": 1}),
+        ("Con un legame profondo, anche se non lo dimostro apertamente", {"Corvo Imperiale": 1}),
+    ]},
+]
+
+ANIMALI_PERCY = {
+    "Aquila": {
+        "gradiente": "linear-gradient(135deg, #142046 0%, #3a5f8a 50%, #a9c9e8 100%)",
+        "rgb_top": (20, 32, 70), "rgb_bottom": (169, 201, 232), "emoji": "🦅",
+        "descrizione": "Voli alto sopra i problemi quotidiani, con una visione chiara di dove vuoi arrivare. Il tuo sguardo coglie i dettagli che altri si perdono da terra.",
+        "dettagli": [("Tratto principale", "Visione ampia"), ("Dominio", "Cielo aperto"),
+                     ("Energia", "Autorevole, lucida"), ("Ti somiglia se", "Vedi sempre il quadro generale prima dei dettagli")],
+    },
+    "Delfino": {
+        "gradiente": "linear-gradient(135deg, #04303a 0%, #0f6e7d 50%, #6ec6d4 100%)",
+        "rgb_top": (4, 48, 58), "rgb_bottom": (110, 198, 212), "emoji": "🐬",
+        "descrizione": "Ti muovi nel mondo con intelligenza sociale e un'energia contagiosa. Sai leggere gli altri e adattarti a ogni gruppo senza perdere te stesso.",
+        "dettagli": [("Tratto principale", "Intelligenza sociale"), ("Dominio", "Mari aperti"),
+                     ("Energia", "Giocosa, empatica"), ("Ti somiglia se", "Ti adatti facilmente restando comunque autentico")],
+    },
+    "Leone": {
+        "gradiente": "linear-gradient(135deg, #4a3a06 0%, #a8821a 50%, #e6c85a 100%)",
+        "rgb_top": (74, 58, 6), "rgb_bottom": (230, 200, 90), "emoji": "🦁",
+        "descrizione": "Hai una presenza che si fa notare senza sforzo. Guidi con sicurezza, e le persone si fidano istintivamente di te.",
+        "dettagli": [("Tratto principale", "Presenza naturale"), ("Dominio", "Savane e territori aperti"),
+                     ("Energia", "Fiera, magnetica"), ("Ti somiglia se", "Le persone ti seguono senza che tu debba chiederlo")],
+    },
+    "Serpente": {
+        "gradiente": "linear-gradient(135deg, #0d1f13 0%, #1a472a 50%, #4a8a5a 100%)",
+        "rgb_top": (13, 31, 19), "rgb_bottom": (74, 138, 90), "emoji": "🐍",
+        "descrizione": "Ti trasformi continuamente, lasciando dietro di te versioni superate di te stesso. La tua astuzia è spesso sottovalutata, ed è proprio lì la tua forza.",
+        "dettagli": [("Tratto principale", "Trasformazione costante"), ("Dominio", "Luoghi nascosti"),
+                     ("Energia", "Sottile, strategica"), ("Ti somiglia se", "Ti reinventi più spesso di quanto la gente immagini")],
+    },
+    "Cavallo": {
+        "gradiente": "linear-gradient(135deg, #3a2a10 0%, #7a5c2a 50%, #c8a262 100%)",
+        "rgb_top": (58, 42, 16), "rgb_bottom": (200, 162, 98), "emoji": "🐴",
+        "descrizione": "La libertà è il tuo bisogno più profondo. Corri verso i tuoi obiettivi con una determinazione che raramente rallenta.",
+        "dettagli": [("Tratto principale", "Libertà e slancio"), ("Dominio", "Pianure aperte"),
+                     ("Energia", "Instancabile, diretta"), ("Ti somiglia se", "Non sopporti sentirti bloccato o limitato")],
+    },
+    "Toro": {
+        "gradiente": "linear-gradient(135deg, #3a1408 0%, #7a2e12 50%, #c8641e 100%)",
+        "rgb_top": (58, 20, 8), "rgb_bottom": (200, 100, 30), "emoji": "🐂",
+        "descrizione": "Una volta deciso qualcosa, nulla ti ferma facilmente. La tua ostinazione, più che un difetto, è la ragione per cui finisci ciò che inizi.",
+        "dettagli": [("Tratto principale", "Determinazione ostinata"), ("Dominio", "Campi e territori solidi"),
+                     ("Energia", "Potente, costante"), ("Ti somiglia se", "Raramente molli qualcosa a metà")],
+    },
+    "Ragno": {
+        "gradiente": "linear-gradient(135deg, #1a1424 0%, #3c2e50 50%, #5c4a78 100%)",
+        "rgb_top": (26, 20, 36), "rgb_bottom": (92, 74, 120), "emoji": "🕷️",
+        "descrizione": "Costruisci pazientemente, filo dopo filo, qualcosa che agli altri sfugge finché non è quasi completo. La pazienza è la tua arma silenziosa.",
+        "dettagli": [("Tratto principale", "Pazienza costruttiva"), ("Dominio", "Angoli nascosti"),
+                     ("Energia", "Meticolosa, tessitrice"), ("Ti somiglia se", "I tuoi piani migliori richiedono tempo per essere apprezzati")],
+    },
+    "Civetta Sacra": {
+        "gradiente": "linear-gradient(135deg, #23232b 0%, #55555f 50%, #8c7850 100%)",
+        "rgb_top": (35, 35, 43), "rgb_bottom": (140, 120, 80), "emoji": "🦉",
+        "descrizione": "La conoscenza è il tuo terreno di caccia preferito. Osservi in silenzio finché non hai capito abbastanza per agire con precisione.",
+        "dettagli": [("Tratto principale", "Saggezza strategica"), ("Dominio", "Notte e silenzio"),
+                     ("Energia", "Analitica, paziente"), ("Ti somiglia se", "Preferisci capire tutto prima di intervenire")],
+    },
+}
+
+QUESTIONS_ANIMALE_PJ = [
+    {"domanda": "Il gruppo deve affrontare una sfida importante. Qual è il tuo contributo?", "opzioni": [
+        ("Offro una visione d'insieme che aiuta tutti a capire la strategia migliore", {"Aquila": 1}),
+        ("Tengo alto il morale del gruppo, anche nei momenti di tensione", {"Delfino": 1}),
+        ("Mi metto naturalmente alla guida, e gli altri mi seguono", {"Leone": 1}),
+        ("Trovo un modo astuto per aggirare l'ostacolo senza scontro diretto", {"Serpente": 1}),
+    ]},
+    {"domanda": "Come lavori su un obiettivo a lungo termine?", "opzioni": [
+        ("Con slancio costante, senza mai fermarmi troppo a lungo", {"Cavallo": 1}),
+        ("Con testardaggine: una volta iniziato, lo porto a termine comunque", {"Toro": 1}),
+        ("Con pazienza, costruendo un pezzo alla volta finché non è perfetto", {"Ragno": 1}),
+        ("Studiando ogni dettaglio prima di muovere il primo passo", {"Civetta Sacra": 1}),
+    ]},
+    {"domanda": "Cosa ti motiva davvero?", "opzioni": [
+        ("La libertà di vedere le cose da una prospettiva più ampia", {"Aquila": 1}),
+        ("Il rispetto e la fiducia che gli altri ripongono in me", {"Leone": 1}),
+        ("La sensazione di corsa verso qualcosa di più grande", {"Cavallo": 1}),
+        ("Il piacere di costruire qualcosa con le mie mani, con calma", {"Ragno": 1}),
+    ]},
+    {"domanda": "Come reagisci quando qualcuno ti sottovaluta?", "opzioni": [
+        ("Non me la prendo: preferisco conquistarli con simpatia", {"Delfino": 1}),
+        ("Lascio che si sbaglino, e li sorprendo al momento giusto", {"Serpente": 1}),
+        ("Dimostro con i fatti, senza bisogno di parole", {"Toro": 1}),
+        ("Non mi interessa dimostrare nulla: so già quanto valgo", {"Civetta Sacra": 1}),
+    ]},
+    {"domanda": "Qual è il tuo modo preferito di risolvere un conflitto?", "opzioni": [
+        ("Prendo le distanze per vedere la situazione più chiaramente", {"Aquila": 1}),
+        ("Cerco di mediare con empatia tra le parti", {"Delfino": 1}),
+        ("Aspetto il momento giusto per intervenire, senza fretta", {"Serpente": 1}),
+        ("Costruisco pazientemente una soluzione che nessuno vede arrivare", {"Ragno": 1}),
+    ]},
+    {"domanda": "Cosa fai quando qualcuno mette in dubbio le tue capacità?", "opzioni": [
+        ("Rispondo con sicurezza: le mie azioni parlano da sole", {"Leone": 1}),
+        ("Mi lancio subito a dimostrare il contrario", {"Cavallo": 1}),
+        ("Non rispondo: dimostro con i risultati, con calma", {"Toro": 1}),
+        ("Analizzo se hanno ragione prima di reagire d'istinto", {"Civetta Sacra": 1}),
+    ]},
+    {"domanda": "Qual è il tuo più grande punto di forza in una squadra?", "opzioni": [
+        ("La chiarezza con cui vedo la strategia generale", {"Aquila": 1}),
+        ("La sicurezza che trasmetto agli altri", {"Leone": 1}),
+        ("L'affidabilità: su di me si può sempre contare", {"Toro": 1}),
+        ("La cura meticolosa nei dettagli che altri trascurano", {"Ragno": 1}),
+    ]},
+    {"domanda": "Come affronti un cambiamento improvviso?", "opzioni": [
+        ("Mi adatto quasi subito, senza troppi drammi", {"Delfino": 1}),
+        ("Mi trasformo insieme al cambiamento, quasi senza sforzo", {"Serpente": 1}),
+        ("Corro incontro al cambiamento con entusiasmo", {"Cavallo": 1}),
+        ("Prima osservo, poi mi adatto con lucidità", {"Civetta Sacra": 1}),
+    ]},
+]
+
+ANIMALI_DIVERGENT = {
+    "Falco": {
+        "gradiente": "linear-gradient(135deg, #14181c 0%, #3a4650 50%, #6a7a86 100%)",
+        "rgb_top": (20, 24, 28), "rgb_bottom": (106, 122, 134), "emoji": "🦅",
+        "descrizione": "Vedi ogni situazione con occhio critico e distaccato, cogliendo dettagli che altri ignorano. Agisci solo quando sei certo del bersaglio.",
+        "dettagli": [("Tratto principale", "Precisione tattica"), ("Habitat", "Cieli alti"),
+                     ("Energia", "Concentrata, decisa"), ("Ti somiglia se", "Preferisci colpire nel segno piuttosto che agire alla cieca")],
+    },
+    "Tasso": {
+        "gradiente": "linear-gradient(135deg, #0d0d0d 0%, #4a4a4a 50%, #a0a0a0 100%)",
+        "rgb_top": (13, 13, 13), "rgb_bottom": (160, 160, 160), "emoji": "🦡",
+        "descrizione": "Sotto un'apparenza tranquilla nascondi una determinazione fortissima. Quando qualcuno minaccia ciò che ami, non esiti a difenderlo con tutte le tue forze.",
+        "dettagli": [("Tratto principale", "Difesa strenua"), ("Habitat", "Tane sicure"),
+                     ("Energia", "Testarda, protettiva"), ("Ti somiglia se", "Difendi chi ami senza pensarci due volte")],
+    },
+    "Volpe Urbana": {
+        "gradiente": "linear-gradient(135deg, #2a1608 0%, #7a3e12 50%, #c8783c 100%)",
+        "rgb_top": (42, 22, 8), "rgb_bottom": (200, 120, 60), "emoji": "🦊",
+        "descrizione": "Ti adatti a ogni contesto con intelligenza pratica, trovando sempre la strada più furba per uscire da una situazione difficile.",
+        "dettagli": [("Tratto principale", "Adattabilità scaltra"), ("Habitat", "Ai confini della città"),
+                     ("Energia", "Sveglia, flessibile"), ("Ti somiglia se", "Trovi sempre un modo, anche quando sembra impossibile")],
+    },
+    "Cerbiatto": {
+        "gradiente": "linear-gradient(135deg, #1a2410 0%, #3e5828 50%, #7a9a5a 100%)",
+        "rgb_top": (26, 36, 16), "rgb_bottom": (122, 154, 90), "emoji": "🦌",
+        "descrizione": "Sei attento, empatico, capace di percepire le tensioni prima che esplodano. Preferisci la pace, ma sai quando è il momento di restare fermo.",
+        "dettagli": [("Tratto principale", "Sensibilità vigile"), ("Habitat", "Radure silenziose"),
+                     ("Energia", "Delicata, attenta"), ("Ti somiglia se", "Percepisci le emozioni altrui prima che vengano dette")],
+    },
+    "Orso": {
+        "gradiente": "linear-gradient(135deg, #1e140a 0%, #4a341a 50%, #8a6a42 100%)",
+        "rgb_top": (30, 20, 10), "rgb_bottom": (138, 106, 66), "emoji": "🐻",
+        "descrizione": "La tua forza tranquilla mette a proprio agio chi ti sta vicino. Non hai bisogno di dimostrare nulla: la tua presenza basta.",
+        "dettagli": [("Tratto principale", "Forza tranquilla"), ("Habitat", "Boschi profondi"),
+                     ("Energia", "Solida, rassicurante"), ("Ti somiglia se", "Le persone si sentono al sicuro semplicemente stando con te")],
+    },
+    "Gatto Selvatico": {
+        "gradiente": "linear-gradient(135deg, #1a1620 0%, #3e3650 50%, #6a5e82 100%)",
+        "rgb_top": (26, 22, 32), "rgb_bottom": (106, 94, 130), "emoji": "🐈",
+        "descrizione": "Segui la tua strada con indipendenza, anche quando va contro l'opinione del gruppo. La tua libertà non è negoziabile.",
+        "dettagli": [("Tratto principale", "Indipendenza ferma"), ("Habitat", "Dove decidi tu"),
+                     ("Energia", "Autonoma, selettiva"), ("Ti somiglia se", "Non ti lasci convincere facilmente a fare ciò che non senti tuo")],
+    },
+    "Corvo": {
+        "gradiente": "linear-gradient(135deg, #0a0c14 0%, #242c40 50%, #3c4560 100%)",
+        "rgb_top": (10, 12, 20), "rgb_bottom": (60, 69, 96), "emoji": "🐦",
+        "descrizione": "Osservi tutto da una prospettiva leggermente diversa da quella degli altri, e questo ti permette di notare ciò che sfugge alla maggioranza.",
+        "dettagli": [("Tratto principale", "Prospettiva insolita"), ("Habitat", "Tetti e luoghi alti"),
+                     ("Energia", "Curiosa, enigmatica"), ("Ti somiglia se", "Vedi le cose in modo diverso dagli altri, spesso in meglio")],
+    },
+    "Lupo di Città": {
+        "gradiente": "linear-gradient(135deg, #10141a 0%, #2e3a46 50%, #526472 100%)",
+        "rgb_top": (16, 20, 26), "rgb_bottom": (82, 100, 114), "emoji": "🐺",
+        "descrizione": "Il legame con il tuo gruppo è la cosa più importante che hai. Da solo sei forte, ma è insieme agli altri che dai il meglio di te.",
+        "dettagli": [("Tratto principale", "Forza di branco"), ("Habitat", "Territori condivisi"),
+                     ("Energia", "Leale, collaborativa"), ("Ti somiglia se", "Dai sempre priorità a chi consideri la tua famiglia")],
+    },
+}
+
+QUESTIONS_ANIMALE_DIV = [
+    {"domanda": "Come reagisci davanti a un pericolo improvviso?", "opzioni": [
+        ("Valuto rapidamente da che parte arriva la minaccia, poi agisco con precisione", {"Falco": 1}),
+        ("Mi metto subito a proteggere chi mi sta vicino", {"Tasso": 1}),
+        ("Cerco d'istinto la via più furba per uscirne", {"Volpe Urbana": 1}),
+        ("Percepisco la tensione ancora prima che accada qualcosa", {"Cerbiatto": 1}),
+    ]},
+    {"domanda": "Qual è il tuo posto naturale in un gruppo?", "opzioni": [
+        ("Sono quello che dà stabilità, senza bisogno di dirlo", {"Orso": 1}),
+        ("Faccio parte del gruppo, ma resto sempre un po' per conto mio", {"Gatto Selvatico": 1}),
+        ("Porto un punto di vista che nessun altro aveva considerato", {"Corvo": 1}),
+        ("Sono profondamente legato agli altri: il gruppo viene prima di tutto", {"Lupo di Città": 1}),
+    ]},
+    {"domanda": "Come prendi le decisioni importanti?", "opzioni": [
+        ("Aspetto di avere il quadro chiaro, poi decido senza esitare", {"Falco": 1}),
+        ("Valuto rapidamente tutte le scappatoie possibili", {"Volpe Urbana": 1}),
+        ("Con calma, senza farmi mettere fretta da nessuno", {"Orso": 1}),
+        ("Guardando la situazione da un'angolazione che altri non considerano", {"Corvo": 1}),
+    ]},
+    {"domanda": "Cosa ti fa arrabbiare di più?", "opzioni": [
+        ("Vedere qualcuno che amo trattato ingiustamente", {"Tasso": 1}),
+        ("Un ambiente pieno di tensione e conflitto costante", {"Cerbiatto": 1}),
+        ("Chi cerca di controllare le mie scelte", {"Gatto Selvatico": 1}),
+        ("Il tradimento da parte di chi consideravo leale", {"Lupo di Città": 1}),
+    ]},
+    {"domanda": "Come ti comporti quando qualcuno ti delude?", "opzioni": [
+        ("Prendo le distanze e osservo con lucidità, senza reagire d'impulso", {"Falco": 1}),
+        ("Ci resto male, ma continuo a proteggere chi merita fiducia", {"Tasso": 1}),
+        ("Semplicemente, mi allontano senza troppi drammi", {"Gatto Selvatico": 1}),
+        ("Ne parlo apertamente: la lealtà per me è tutto", {"Lupo di Città": 1}),
+    ]},
+    {"domanda": "Qual è il tuo modo di affrontare i problemi quotidiani?", "opzioni": [
+        ("Con soluzioni pratiche e un po' creative", {"Volpe Urbana": 1}),
+        ("Con calma, cercando di non alimentare ulteriore tensione", {"Cerbiatto": 1}),
+        ("Con pazienza, senza lasciarmi travolgere", {"Orso": 1}),
+        ("Osservando il problema da più angolazioni prima di agire", {"Corvo": 1}),
+    ]},
+    {"domanda": "Cosa cercano gli altri in te?", "opzioni": [
+        ("Precisione e lucidità nei momenti difficili", {"Falco": 1}),
+        ("Qualcuno che sappia ascoltare senza giudicare", {"Cerbiatto": 1}),
+        ("Un punto fermo su cui contare sempre", {"Orso": 1}),
+        ("Lealtà incondizionata, qualunque cosa succeda", {"Lupo di Città": 1}),
+    ]},
+    {"domanda": "Come reagisci se qualcuno cerca di approfittarsi di te?", "opzioni": [
+        ("Mi difendo con determinazione, senza cedere di un millimetro", {"Tasso": 1}),
+        ("Giro la situazione a mio favore con astuzia", {"Volpe Urbana": 1}),
+        ("Mi allontano semplicemente, senza dare spiegazioni", {"Gatto Selvatico": 1}),
+        ("Aspetto e osservo, capendo le loro vere intenzioni prima di agire", {"Corvo": 1}),
+    ]},
+]
+
+ANIMALI_HUNGER = {
+    "Usignolo": {
+        "gradiente": "linear-gradient(135deg, #241a2e 0%, #5a3a5e 50%, #a8749e 100%)",
+        "rgb_top": (36, 26, 46), "rgb_bottom": (168, 116, 158), "emoji": "🐦",
+        "descrizione": "La tua voce, letterale o simbolica, ha il potere di smuovere gli altri. Sai comunicare emozioni che altri faticano a esprimere.",
+        "dettagli": [("Tratto principale", "Voce che unisce"), ("Habitat", "Ai margini della foresta"),
+                     ("Energia", "Espressiva, empatica"), ("Ti somiglia se", "Le tue parole spesso restano impresse negli altri")],
+    },
+    "Lupo Selvatico": {
+        "gradiente": "linear-gradient(135deg, #12160e 0%, #363e28 50%, #5e6a42 100%)",
+        "rgb_top": (18, 22, 14), "rgb_bottom": (94, 106, 66), "emoji": "🐺",
+        "descrizione": "Sopravvivi meglio quando sei parte di un branco. La fedeltà verso chi consideri famiglia guida ogni tua decisione importante.",
+        "dettagli": [("Tratto principale", "Istinto di branco"), ("Habitat", "Territori selvaggi"),
+                     ("Energia", "Protettiva, risoluta"), ("Ti somiglia se", "Non abbandoneresti mai chi consideri tuo")],
+    },
+    "Volpe della Foresta": {
+        "gradiente": "linear-gradient(135deg, #2e1608 0%, #7a3c12 50%, #c8823c 100%)",
+        "rgb_top": (46, 22, 8), "rgb_bottom": (200, 130, 60), "emoji": "🦊",
+        "descrizione": "Sai leggere ogni situazione e adattarti in fretta. La sopravvivenza, per te, è soprattutto una questione di intelligenza.",
+        "dettagli": [("Tratto principale", "Adattabilità scaltra"), ("Habitat", "Boschi e sottobosco"),
+                     ("Energia", "Rapida, calcolatrice"), ("Ti somiglia se", "Trovi sempre una via d'uscita creativa")],
+    },
+    "Civetta della Notte": {
+        "gradiente": "linear-gradient(135deg, #0a1614 0%, #1e3a34 50%, #3a645a 100%)",
+        "rgb_top": (10, 22, 20), "rgb_bottom": (58, 100, 90), "emoji": "🦉",
+        "descrizione": "Osservi in silenzio prima di muoverti. La pazienza ti ha salvato più volte di quanto tu stesso riconosca.",
+        "dettagli": [("Tratto principale", "Osservazione paziente"), ("Habitat", "Rami alti, nella notte"),
+                     ("Energia", "Calma, vigile"), ("Ti somiglia se", "Aspetti il momento giusto prima di agire")],
+    },
+    "Cervo Guardingo": {
+        "gradiente": "linear-gradient(135deg, #1a1e0e 0%, #3e4a22 50%, #6e7a42 100%)",
+        "rgb_top": (26, 30, 14), "rgb_bottom": (110, 122, 66), "emoji": "🦌",
+        "descrizione": "Percepisci il pericolo prima che si manifesti del tutto. La tua prudenza non è paura: è saggezza pura.",
+        "dettagli": [("Tratto principale", "Percezione del pericolo"), ("Habitat", "Radure aperte"),
+                     ("Energia", "Attenta, prudente"), ("Ti somiglia se", "Senti quando qualcosa non va, prima ancora di saperlo spiegare")],
+    },
+    "Orso della Foresta": {
+        "gradiente": "linear-gradient(135deg, #120e0a 0%, #3a2c1c 50%, #6a5236 100%)",
+        "rgb_top": (18, 14, 10), "rgb_bottom": (106, 82, 54), "emoji": "🐻",
+        "descrizione": "La tua forza silenziosa è un rifugio per chi ti sta vicino. Non cerchi lo scontro, ma se serve, nessuno ti sposta.",
+        "dettagli": [("Tratto principale", "Forza silenziosa"), ("Habitat", "Foreste dense"),
+                     ("Energia", "Solida, imperturbabile"), ("Ti somiglia se", "Le persone si sentono protette accanto a te")],
+    },
+    "Vipera": {
+        "gradiente": "linear-gradient(135deg, #0e1608 0%, #2c3e18 50%, #566e34 100%)",
+        "rgb_top": (14, 22, 8), "rgb_bottom": (86, 110, 52), "emoji": "🐍",
+        "descrizione": "Sai aspettare senza mai perdere lucidità. Quando agisci, lo fai con precisione chirurgica, senza sprecare energie.",
+        "dettagli": [("Tratto principale", "Attesa strategica"), ("Habitat", "Nascosta, tra le pietre"),
+                     ("Energia", "Fredda, precisa"), ("Ti somiglia se", "Preferisci un colpo solo ma perfetto a mille tentativi confusi")],
+    },
+    "Scoiattolo": {
+        "gradiente": "linear-gradient(135deg, #241608 0%, #5e3a18 50%, #a2723e 100%)",
+        "rgb_top": (36, 22, 8), "rgb_bottom": (162, 114, 62), "emoji": "🐿️",
+        "descrizione": "Ti prepari sempre in anticipo, pensando al domani mentre gli altri vivono solo l'oggi. La previdenza è la tua superpotenza silenziosa.",
+        "dettagli": [("Tratto principale", "Previdenza costante"), ("Habitat", "Tra i rami, sempre in movimento"),
+                     ("Energia", "Instancabile, previdente"), ("Ti somiglia se", "Hai sempre un piano di riserva pronto")],
+    },
+}
+
+QUESTIONS_ANIMALE_HG = [
+    {"domanda": "Nell'arena, il tuo ruolo naturale nel gruppo sarebbe...", "opzioni": [
+        ("Tenere unito il morale di tutti, anche nei momenti più bui", {"Usignolo": 1}),
+        ("Proteggere fisicamente chi è più debole di me", {"Lupo Selvatico": 1}),
+        ("Trovare la via di fuga che nessun altro aveva notato", {"Volpe della Foresta": 1}),
+        ("Osservare in silenzio, raccogliendo informazioni utili a tutti", {"Civetta della Notte": 1}),
+    ]},
+    {"domanda": "Come ti prepari prima di una prova importante?", "opzioni": [
+        ("Resto all'erta, cercando di anticipare ogni possibile rischio", {"Cervo Guardingo": 1}),
+        ("Mi concentro sulla mia forza interiore, con calma", {"Orso della Foresta": 1}),
+        ("Aspetto il momento perfetto, senza sprecare energie prima", {"Vipera": 1}),
+        ("Preparo scorte e piani di riserva per ogni scenario possibile", {"Scoiattolo": 1}),
+    ]},
+    {"domanda": "Un pericolo si avvicina ma non è ancora visibile. Cosa fai?", "opzioni": [
+        ("Avviso subito gli altri, anche a rischio di sbagliarmi", {"Usignolo": 1}),
+        ("Cerco silenziosamente un percorso alternativo", {"Volpe della Foresta": 1}),
+        ("Sento che qualcosa non va, ancora prima di vederlo", {"Cervo Guardingo": 1}),
+        ("Resto immobile e aspetto di capire da dove arriva", {"Vipera": 1}),
+    ]},
+    {"domanda": "Cosa ti motiva davvero a continuare, anche quando è difficile?", "opzioni": [
+        ("Le persone che considero la mia famiglia", {"Lupo Selvatico": 1}),
+        ("La certezza che capire di più mi darà un vantaggio", {"Civetta della Notte": 1}),
+        ("La consapevolezza della mia stessa resistenza", {"Orso della Foresta": 1}),
+        ("Il pensiero che la preparazione di oggi mi salverà domani", {"Scoiattolo": 1}),
+    ]},
+    {"domanda": "Come reagisci quando qualcuno ha bisogno del tuo aiuto?", "opzioni": [
+        ("Gli parlo, cercando le parole giuste per fargli forza", {"Usignolo": 1}),
+        ("Intervengo subito, senza pensarci due volte", {"Lupo Selvatico": 1}),
+        ("Gli offro la mia presenza stabile, senza troppe parole", {"Orso della Foresta": 1}),
+        ("Condivido quello che ho messo da parte per momenti come questo", {"Scoiattolo": 1}),
+    ]},
+    {"domanda": "Qual è la tua più grande risorsa per sopravvivere?", "opzioni": [
+        ("La capacità di improvvisare soluzioni intelligenti", {"Volpe della Foresta": 1}),
+        ("La pazienza di aspettare il momento giusto per agire", {"Civetta della Notte": 1}),
+        ("La freddezza sotto pressione", {"Vipera": 1}),
+        ("L'aver già pensato a un piano B, C e D", {"Scoiattolo": 1}),
+    ]},
+    {"domanda": "Come ti descriveresti in una sola parola?", "opzioni": [
+        ("Espressivo", {"Usignolo": 1}),
+        ("Percettivo", {"Cervo Guardingo": 1}),
+        ("Solido", {"Orso della Foresta": 1}),
+        ("Calcolatore", {"Vipera": 1}),
+    ]},
+    {"domanda": "Qual è il tuo rapporto con gli altri concorrenti?", "opzioni": [
+        ("Sono leale solo a chi mi ha dimostrato di meritarlo", {"Lupo Selvatico": 1}),
+        ("Valuto ognuno come una pedina utile, con pragmatismo", {"Volpe della Foresta": 1}),
+        ("Cerco di capire le loro intenzioni prima di fidarmi", {"Cervo Guardingo": 1}),
+        ("Li osservo a lungo prima di decidere se avvicinarmi", {"Civetta della Notte": 1}),
+    ]},
+]
+
+ANIMALE_ENTITA_MONDO = {"hogwarts": ANIMALI_HOGWARTS, "percy": ANIMALI_PERCY, "divergent": ANIMALI_DIVERGENT, "hunger": ANIMALI_HUNGER}
+ANIMALE_QUESTIONS_MONDO = {"hogwarts": QUESTIONS_ANIMALE_HP, "percy": QUESTIONS_ANIMALE_PJ, "divergent": QUESTIONS_ANIMALE_DIV, "hunger": QUESTIONS_ANIMALE_HG}
+STILE_CARD_MONDO = {"hogwarts": "parchment", "percy": "marble", "divergent": "steel", "hunger": "canvas"}
+STILE_TYPEWRITER_MONDO = {"hogwarts": "pergamena", "percy": "marmo", "divergent": "acciaio", "hunger": "arena"}
+FONT_TITOLO_MONDO = {"hogwarts": "titolo_hp", "percy": "titolo_pj", "divergent": "titolo_div", "hunger": "titolo_hg"}
+TITOLO_CSS_MONDO = {"hogwarts": "hat-title", "percy": "camp-title", "divergent": "steel-title", "hunger": "arena-title"}
+SUBTITOLO_CSS_MONDO = {"hogwarts": "subtitle", "percy": "camp-subtitle", "divergent": "steel-subtitle", "hunger": "arena-subtitle"}
+
+ANIMALE_TESTI_MONDO = {
+    "hogwarts": {
+        "titolo": "Qual è il tuo Animale Guida?",
+        "sottotitolo": "\"Non tutti gli animali guida ruggiscono: alcuni osservano, in silenzio, aspettando il momento giusto.\"",
+        "eyebrow_share": "IL TUO ANIMALE GUIDA A HOGWARTS È",
+        "footer_share": "ANIMALE GUIDA DI HOGWARTS",
+        "bottone_avvio": "🔮 Scopri il tuo Animale Guida",
+    },
+    "percy": {
+        "titolo": "Qual è la tua Creatura Guida?",
+        "sottotitolo": "\"Gli antichi eroi avevano sempre una creatura sacra al proprio fianco. Qual è la tua?\"",
+        "eyebrow_share": "LA TUA CREATURA GUIDA È",
+        "footer_share": "CREATURA GUIDA DEL CAMPO MEZZOSANGUE",
+        "bottone_avvio": "🔮 Scopri la tua Creatura Guida",
+    },
+    "divergent": {
+        "titolo": "Qual è il tuo Animale Guida?",
+        "sottotitolo": "\"Ogni fazione ha i suoi valori. Ma il tuo istinto più profondo somiglia a un animale preciso.\"",
+        "eyebrow_share": "IL TUO ANIMALE GUIDA È",
+        "footer_share": "ANIMALE GUIDA DELLE FAZIONI",
+        "bottone_avvio": "🔮 Scopri il tuo Animale Guida",
+    },
+    "hunger": {
+        "titolo": "Qual è il tuo Animale Guida?",
+        "sottotitolo": "\"Nella foresta, ogni tributo impara presto a riconoscere l'animale che somiglia al proprio istinto.\"",
+        "eyebrow_share": "LA FORESTA HA RIVELATO IL TUO ANIMALE GUIDA:",
+        "footer_share": "ANIMALE GUIDA DI PANEM",
+        "bottone_avvio": "🔥 Scopri il tuo Animale Guida",
+    },
+}
+
+
+def render_animale_guida():
+    if st.button("← Torna al menu"):
+        st.session_state.pagina = "menu"
+        st.session_state.pop("animale_mondo", None)
+        st.rerun()
+
+    mondo = st.session_state.get("animale_mondo")
+    if not mondo:
+        st.markdown('<div class="nexus-title" style="font-size:2.2rem;">🔮 Animale Guida</div>', unsafe_allow_html=True)
+        st.markdown('<div class="nexus-subtitle">Scegli un mondo e scopri il tuo animale guida</div>', unsafe_allow_html=True)
+        render_selettore_mondo("animale_mondo")
+        return
+
+    prefix = f"animale_{mondo}"
+    entita = ANIMALE_ENTITA_MONDO[mondo]
+    questions = ANIMALE_QUESTIONS_MONDO[mondo]
+    testi = ANIMALE_TESTI_MONDO[mondo]
+    stile_card = STILE_CARD_MONDO[mondo]
+    stile_tw = STILE_TYPEWRITER_MONDO[mondo]
+    modificatore = MONDO_MODIFICATORE[mondo]
+    titolo_css = TITOLO_CSS_MONDO[mondo]
+    subtitolo_css = SUBTITOLO_CSS_MONDO[mondo]
+
+    if MONDO_SFONDO[mondo]:
+        MONDO_SFONDO[mondo]()
+
+    st.markdown(f'<div class="{titolo_css}" style="font-size:2.2rem;">🔮 {testi["titolo"]}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="{subtitolo_css}">{testi["sottotitolo"]}</div>', unsafe_allow_html=True)
+
+    init_state(prefix, entita)
+    if f"{prefix}_ordine" not in st.session_state:
+        st.session_state[f"{prefix}_ordine"] = list(range(len(questions)))
+        random.shuffle(st.session_state[f"{prefix}_ordine"])
+
+    if not st.session_state[f"{prefix}_iniziato"]:
+        MONDO_EMBLEMA[mondo]()
+        st.markdown(
+            f'<div class="{stile_card}"><h3>Prima di Scoprirlo</h3>'
+            f'Rispondi con sincerità a {len(questions)} situazioni. Non esistono risposte giuste '
+            'o sbagliate: il tuo istinto conosce già la risposta.</div>',
+            unsafe_allow_html=True,
+        )
+        if st.button(testi["bottone_avvio"], use_container_width=True):
+            st.session_state[f"{prefix}_iniziato"] = True
+            st.rerun()
+
+    elif not st.session_state[f"{prefix}_finito"]:
+        idx = st.session_state[f"{prefix}_ordine"][st.session_state[f"{prefix}_domanda"]]
+        domanda = questions[idx]
+        st.markdown(
+            f'<div class="qcounter">Domanda {st.session_state[f"{prefix}_domanda"] + 1} di {len(questions)}</div>',
+            unsafe_allow_html=True,
+        )
+        st.progress(st.session_state[f"{prefix}_domanda"] / len(questions))
+        render_typewriter_question(domanda["domanda"], stile=stile_tw)
+
+        opzioni = list(domanda["opzioni"])
+        random.Random(idx + 500).shuffle(opzioni)
+        for testo_opzione, punti in opzioni:
+            if st.button(testo_opzione, key=f"{prefix}_{idx}_{testo_opzione}"):
+                rispondi(prefix, questions, punti)
+                st.rerun()
+
+    else:
+        punteggi = st.session_state[f"{prefix}_punteggi"]
+        vincitore = max(punteggi, key=punteggi.get)
+        info = entita[vincitore]
+
+        st.balloons()
+
+        dettagli_html = "".join(
+            f'<div class="fact-item"><span class="fact-label {modificatore}">{label}</span><span class="fact-value">{valore}</span></div>'
+            for label, valore in info["dettagli"]
+        )
+        classe_house = f"result-house {modificatore}".strip()
+        classe_desc = f"result-desc {modificatore}".strip()
+
+        st.markdown(
+            textwrap.dedent(f"""\
+            <div class="result-card" style="background:{info['gradiente']};">
+            <div style="font-size:3.2rem;">{info['emoji']}</div>
+            <div class="{classe_house}">{vincitore}</div>
+            <div class="{classe_desc}">{info['descrizione']}</div>
+            <div class="fact-grid">{dettagli_html}</div>
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+
+        st.write("")
+        with st.spinner("Sto preparando la tua card da condividere..."):
+            buf = genera_immagine_condivisione(
+                vincitore, info, testi["eyebrow_share"], testi["footer_share"],
+                titolo_font_key=FONT_TITOLO_MONDO[mondo],
+            )
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.image(buf, use_container_width=True)
+        with col2:
+            st.write("")
+            st.write("Scarica la tua card e condividila dove vuoi.")
+            nome_file = vincitore.lower().replace(" ", "_")
+            st.download_button(
+                "📥 Scarica la card", data=buf,
+                file_name=f"animale_guida_{nome_file}.png",
+                mime="image/png", use_container_width=True,
+            )
+
+        st.write("")
+        st.markdown(f'<div class="{stile_card}"><h3>Il tuo profilo tra gli animali guida</h3></div>', unsafe_allow_html=True)
+        nomi_entita = list(entita.keys())
+        render_radar(nomi_entita, [punteggi[n] for n in nomi_entita])
+
+        for nome, punti in sorted(punteggi.items(), key=lambda x: -x[1]):
+            pct = punti / len(questions)
+            st.write(f"{entita[nome]['emoji']} **{nome}** — {punti:g} punti")
+            st.progress(min(pct, 1.0))
+
+        st.write("")
+        if st.button("🔄 Scopri di nuovo", use_container_width=True):
+            reset_quiz(prefix, entita, questions)
+            st.rerun()
+
+    st.write("")
+    if st.button("🔄 Cambia mondo", key="cambia_mondo_animale", use_container_width=True):
+        st.session_state.pop("animale_mondo", None)
+        st.rerun()
+
+
+# ============================================================
 # MENU INIZIALE
 # ============================================================
 def render_menu():
@@ -3717,6 +4332,20 @@ def render_menu():
         st.session_state.pagina = "tarocchi"
         st.rerun()
 
+    st.markdown(
+        textwrap.dedent("""\
+        <div class="menu-card" style="background:linear-gradient(160deg, #0e2233 0%, #1a2f14 100%);">
+        <div class="menu-card-icon">🔮</div>
+        <div class="menu-card-title">Animale Guida</div>
+        <div class="menu-card-desc">Un vero quiz dedicato — non un'assegnazione casuale — per scoprire l'animale che ti somiglia in ogni mondo</div>
+        </div>
+        """),
+        unsafe_allow_html=True,
+    )
+    if st.button("Scopri il tuo animale", key="entra_animale", use_container_width=True):
+        st.session_state.pagina = "animale"
+        st.rerun()
+
 
 # ============================================================
 # NAVIGAZIONE PRINCIPALE
@@ -3746,3 +4375,5 @@ elif st.session_state.pagina == "memory":
     render_memory()
 elif st.session_state.pagina == "tarocchi":
     render_tarocchi()
+elif st.session_state.pagina == "animale":
+    render_animale_guida()
