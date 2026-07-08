@@ -3260,6 +3260,289 @@ def render_memory():
 
 
 # ============================================================
+# STRUMENTO 6 — LETTURA DEI TAROCCHI FANTASY
+# Mazzo originale di 16 arcani ispirati ai quattro mondi, non
+# tarocchi reali né immagini di altri mazzi. Ogni carta ha un
+# significato dritto e uno rovesciato, scritti come una lettura
+# introspettiva seria, non come oroscopo scherzoso.
+# ============================================================
+TAROT_DECK = [
+    {
+        "numero": "I", "nome": "Il Cappello", "sottotitolo": "La Scelta", "emoji": "🎩",
+        "dritto": "Un bivio importante è davanti a te. Non temere di scegliere: la decisione più autentica è raramente quella più comoda.",
+        "significato_rovesciato": "Stai rimandando una scelta che, nel profondo, sai già di dover fare. L'indecisione, a lungo andare, è essa stessa una scelta.",
+    },
+    {
+        "numero": "II", "nome": "Il Tridente", "sottotitolo": "Le Profondità", "emoji": "🔱",
+        "dritto": "Le tue emozioni sono una fonte di forza, non una debolezza da nascondere. Lasciale muovere come la marea.",
+        "significato_rovesciato": "Stai reprimendo qualcosa che merita di essere sentito fino in fondo. Le acque ferme, prima o poi, straripano.",
+    },
+    {
+        "numero": "III", "nome": "La Bussola", "sottotitolo": "Il Cammino", "emoji": "🧭",
+        "dritto": "Sei più vicino alla tua direzione di quanto pensi. Fidati dei passi che hai già fatto.",
+        "significato_rovesciato": "Ti sei disorientato inseguendo aspettative che non erano tue. È il momento di ritrovare la tua rotta.",
+    },
+    {
+        "numero": "IV", "nome": "La Fiamma", "sottotitolo": "La Resilienza", "emoji": "🔥",
+        "dritto": "Hai attraversato più di quanto immaginavi di poter sopportare, e sei ancora qui. Questa è la tua prova più grande.",
+        "significato_rovesciato": "Il fuoco che ti ha protetto rischia di consumarti. Anche la resilienza, ogni tanto, ha bisogno di riposo.",
+    },
+    {
+        "numero": "V", "nome": "La Civetta", "sottotitolo": "La Saggezza", "emoji": "🦉",
+        "dritto": "La risposta che cerchi richiede più osservazione che azione. Guarda con calma prima di muoverti.",
+        "significato_rovesciato": "Stai accumulando informazioni invece di agire. A un certo punto, sapere abbastanza è già sufficiente.",
+    },
+    {
+        "numero": "VI", "nome": "Lo Specchio", "sottotitolo": "La Verità", "emoji": "🪞",
+        "dritto": "Una verità scomoda sta per emergere. Accoglierla ti libererà più di quanto pensi.",
+        "significato_rovesciato": "Ti stai raccontando una versione dei fatti che ti conviene, non quella reale. Guarda meglio.",
+    },
+    {
+        "numero": "VII", "nome": "La Lama", "sottotitolo": "Il Coraggio", "emoji": "⚔️",
+        "dritto": "Il momento di agire è arrivato. Il coraggio non è l'assenza di paura, ma la scelta di muoversi comunque.",
+        "significato_rovesciato": "Stai confondendo l'impulsività con il coraggio. Non ogni battaglia merita di essere combattuta subito.",
+    },
+    {
+        "numero": "VIII", "nome": "Il Telaio", "sottotitolo": "La Creazione", "emoji": "🧵",
+        "dritto": "Stai costruendo qualcosa di importante, filo dopo filo. La pazienza fa parte del risultato finale.",
+        "significato_rovesciato": "Hai iniziato troppe cose senza portarne a termine nessuna. Scegli cosa finire prima di iniziare altro.",
+    },
+    {
+        "numero": "IX", "nome": "Il Branco", "sottotitolo": "La Lealtà", "emoji": "🐺",
+        "dritto": "Le persone intorno a te sono più solide di quanto tu creda. Lasciati sostenere, almeno per una volta.",
+        "significato_rovesciato": "Un legame che credevi solido si sta indebolendo. Vale la pena affrontarlo apertamente, prima che sia tardi.",
+    },
+    {
+        "numero": "X", "nome": "La Tempesta", "sottotitolo": "Il Cambiamento", "emoji": "⛈️",
+        "dritto": "Un cambiamento inevitabile sta arrivando. Resistervi costerà più energia che attraversarlo.",
+        "significato_rovesciato": "Stai bloccando un cambiamento necessario per paura di perdere il controllo.",
+    },
+    {
+        "numero": "XI", "nome": "La Corona", "sottotitolo": "L'Ambizione", "emoji": "👑",
+        "dritto": "Hai il potenziale per raggiungere ciò che desideri, ma dovrai essere disposto a pagarne il prezzo.",
+        "significato_rovesciato": "Stai inseguendo un traguardo che, in fondo, non è più davvero tuo. Chiediti per chi lo stai facendo.",
+    },
+    {
+        "numero": "XII", "nome": "Il Giardino", "sottotitolo": "La Crescita", "emoji": "🌱",
+        "dritto": "Ciò che stai coltivando ora — una relazione, un progetto, te stesso — darà frutti, ma non subito. Continua a innaffiarlo.",
+        "significato_rovesciato": "Hai trascurato qualcosa che avevi iniziato a costruire con cura. Non è troppo tardi per tornare a occupartene.",
+    },
+    {
+        "numero": "XIII", "nome": "Il Labirinto", "sottotitolo": "La Prova", "emoji": "🌀",
+        "dritto": "Ti trovi in una fase complicata, ma ogni svolta ti sta insegnando qualcosa. Non cercare scorciatoie.",
+        "significato_rovesciato": "Stai girando in tondo intorno allo stesso problema. Serve un punto di vista nuovo, non più sforzo.",
+    },
+    {
+        "numero": "XIV", "nome": "L'Alba", "sottotitolo": "La Rinascita", "emoji": "🌅",
+        "dritto": "Qualcosa in te sta per rinnovarsi davvero. Lascia che la vecchia versione di te stesso si congedi in pace.",
+        "significato_rovesciato": "Ti aggrappi a un capitolo che si è già chiuso. Il nuovo inizio aspetta solo che tu lo lasci andare.",
+    },
+    {
+        "numero": "XV", "nome": "La Bilancia", "sottotitolo": "La Giustizia", "emoji": "⚖️",
+        "dritto": "Una situazione richiede equilibrio e onestà, anche quando la verità è scomoda per tutti.",
+        "significato_rovesciato": "Stai giudicando una situazione senza avere tutti gli elementi. Sospendi il verdetto ancora un po'.",
+    },
+    {
+        "numero": "XVI", "nome": "L'Ombra", "sottotitolo": "La Paura", "emoji": "🌑",
+        "dritto": "C'è una paura che eviti di guardare in faccia. Nominarla è il primo passo per attraversarla.",
+        "significato_rovesciato": "Hai lasciato che una paura prendesse più spazio di quanto meritasse. È tempo di ridimensionarla.",
+    },
+]
+
+TAROT_SINTESI = [
+    "Il filo che lega queste tre carte parla di un percorso che si sta ancora scrivendo: ciò che hai vissuto ha significato, ciò che vivi ora ha un peso reale, e ciò che verrà dipenderà più dalle tue scelte che dal caso.",
+    "Non tutte le risposte sono già chiare, ed è giusto così. Questa lettura non è un verdetto, ma un invito a guardare con più attenzione a ciò che, nel profondo, già sai di te stesso.",
+    "Passato, presente e futuro qui non sono tre momenti separati, ma un unico movimento: quello che sei diventato scorre in quello che stai diventando.",
+    "Le carte non decidono per te — indicano solo dove guardare. Il resto, come sempre, resta nelle tue mani.",
+    "C'è una coerenza silenziosa tra queste tre carte, anche se non è immediata da vedere. Vale la pena sederci un momento con quello che hanno mostrato, prima di correre alla prossima cosa.",
+    "Nessuna carta qui è un ostacolo insormontabile né una promessa garantita. Sono, più semplicemente, uno specchio onesto — e gli specchi onesti sono rari.",
+]
+
+
+def pesca_lettura_tarocchi():
+    mazzo = TAROT_DECK.copy()
+    random.shuffle(mazzo)
+    scelte = mazzo[:3]
+    lettura = []
+    for carta in scelte:
+        rovesciata = random.random() < 0.35
+        lettura.append({**carta, "orientamento_rovesciato": rovesciata})
+    sintesi = random.choice(TAROT_SINTESI)
+    return lettura, sintesi
+
+
+def render_tarot_card_svg(carta, larghezza=170):
+    numero = carta["numero"]
+    nome = carta["nome"].upper()
+    emoji = carta["emoji"]
+    rovesciata = carta["orientamento_rovesciato"]
+    rotazione_attr = 'transform="rotate(180 90 145)"' if rovesciata else ""
+    etichetta_rov = (
+        '<text x="90" y="258" font-family="IBM Plex Mono, monospace" font-size="10" '
+        'letter-spacing="2" fill="#c9a227" text-anchor="middle">ROVESCIATA</text>'
+        if rovesciata else ""
+    )
+    svg = textwrap.dedent(f"""\
+    <svg width="{larghezza}" height="270" viewBox="0 0 180 270" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+    <linearGradient id="tarotbg{numero}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#241a3d"/>
+    <stop offset="100%" stop-color="#120d24"/>
+    </linearGradient>
+    </defs>
+    <rect x="3" y="3" width="174" height="264" rx="8" fill="url(#tarotbg{numero})" stroke="#f3d98b" stroke-width="2"/>
+    <rect x="10" y="10" width="160" height="250" rx="4" fill="none" stroke="#f3d98b" stroke-width="1" opacity="0.55"/>
+    <text x="90" y="34" font-family="Cinzel, serif" font-size="15" font-weight="700" fill="#f3d98b" text-anchor="middle">{numero}</text>
+    <g {rotazione_attr}>
+    <text x="90" y="165" font-size="58" text-anchor="middle">{emoji}</text>
+    </g>
+    <line x1="30" y1="215" x2="150" y2="215" stroke="#f3d98b" stroke-width="1" opacity="0.5"/>
+    <text x="90" y="236" font-family="Cinzel Decorative, serif" font-size="13" font-weight="700" fill="#f3d98b" text-anchor="middle">{nome}</text>
+    {etichetta_rov}
+    </svg>
+    """)
+    st.markdown(svg, unsafe_allow_html=True)
+
+
+def genera_immagine_lettura(lettura, sintesi):
+    W, H = 1080, 1080
+    top, bottom = (26, 18, 46), (74, 42, 112)
+    img = Image.new("RGB", (W, H), top)
+    draw = ImageDraw.Draw(img)
+    for y in range(H):
+        t = y / H
+        col = tuple(int(top[c] + (bottom[c] - top[c]) * t) for c in range(3))
+        draw.line([(0, y), (W, y)], fill=col)
+
+    margine = 46
+    draw.rectangle([margine, margine, W - margine, H - margine], outline=(243, 217, 139), width=6)
+    draw.rectangle(
+        [margine + 14, margine + 14, W - margine - 14, H - margine - 14],
+        outline=(243, 217, 139, 120), width=1,
+    )
+
+    fonts_bytes = carica_font()
+    f_eyebrow = _font(fonts_bytes, "corsivo", 30)
+    f_titolo = _font(fonts_bytes, "titolo_pj", 62)
+    f_carta = _font(fonts_bytes, "corsivo", 28)
+    f_desc = _font(fonts_bytes, "corpo", 32)
+    f_footer = _font(fonts_bytes, "corsivo", 24)
+
+    def testo_centrato(testo, y, font, fill=(255, 255, 255)):
+        bbox = draw.textbbox((0, 0), testo, font=font)
+        larghezza = bbox[2] - bbox[0]
+        draw.text(((W - larghezza) / 2, y), testo, font=font, fill=fill)
+
+    testo_centrato("LA LETTURA HA RIVELATO", 150, f_eyebrow)
+    testo_centrato("TAROCCHI FANTASY", 205, f_titolo)
+
+    y = 320
+    etichette = ["PASSATO", "PRESENTE", "FUTURO"]
+    for etichetta, carta in zip(etichette, lettura):
+        stato = " (rovesciata)" if carta["orientamento_rovesciato"] else ""
+        testo_centrato(f"{etichetta}: {carta['nome']}{stato}", y, f_carta)
+        y += 48
+
+    y += 20
+    draw.line([(200, y), (W - 200, y)], fill=(243, 217, 139, 140), width=1)
+    y += 50
+
+    for riga in textwrap.fill(sintesi, width=42).split("\n"):
+        testo_centrato(riga, y, f_desc)
+        y += 46
+
+    testo_centrato("LETTURA DEI TAROCCHI FANTASY", H - 110, f_footer)
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    return buf
+
+
+def render_tarocchi():
+    if st.button("← Torna al menu"):
+        st.session_state.pagina = "menu"
+        st.session_state.pop("tarot_lettura", None)
+        st.session_state.pop("tarot_sintesi", None)
+        st.rerun()
+
+    render_nexus_background()
+    st.markdown('<div class="nexus-title" style="font-size:2.2rem;">🃏 Tarocchi Fantasy</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="nexus-subtitle">Un mazzo di 16 arcani originali, per una lettura di Passato, Presente e Futuro</div>',
+        unsafe_allow_html=True,
+    )
+
+    if "tarot_lettura" not in st.session_state:
+        st.markdown(
+            textwrap.dedent("""\
+            <div class="marble">
+            <h3>Prima di Pescare</h3>
+            Concentrati un momento su una domanda o una situazione che ti sta a cuore.
+            Le carte non predicono il futuro: aiutano a guardare con più chiarezza a ciò
+            che già senti, ma fatichi a mettere a fuoco. Quando sei pronto, mescola il
+            mazzo e pesca tre carte.
+            </div>
+            """),
+            unsafe_allow_html=True,
+        )
+        if st.button("🃏 Mescola e pesca le carte", use_container_width=True):
+            lettura, sintesi = pesca_lettura_tarocchi()
+            st.session_state.tarot_lettura = lettura
+            st.session_state.tarot_sintesi = sintesi
+            st.rerun()
+
+    else:
+        lettura = st.session_state.tarot_lettura
+        sintesi = st.session_state.tarot_sintesi
+        etichette = ["Passato", "Presente", "Futuro"]
+
+        cols = st.columns(3)
+        for col, etichetta, carta in zip(cols, etichette, lettura):
+            with col:
+                st.markdown(
+                    f'<div class="qcounter" style="margin-bottom:4px;">{etichetta}</div>',
+                    unsafe_allow_html=True,
+                )
+                render_tarot_card_svg(carta)
+
+        st.write("")
+        for etichetta, carta in zip(etichette, lettura):
+            testo_significato = carta["dritto"] if not carta["orientamento_rovesciato"] else carta["significato_rovesciato"]
+            stato = " · rovesciata" if carta["orientamento_rovesciato"] else ""
+            st.markdown(
+                f'<div class="marble"><h3>{etichetta} — {carta["nome"]}{stato}</h3>{testo_significato}</div>',
+                unsafe_allow_html=True,
+            )
+
+        st.markdown(
+            f'<div class="marble" style="font-style:italic;"><h3>Sintesi della lettura</h3>{sintesi}</div>',
+            unsafe_allow_html=True,
+        )
+
+        st.write("")
+        with st.spinner("Sto preparando la tua lettura da condividere..."):
+            buf = genera_immagine_lettura(lettura, sintesi)
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.image(buf, use_container_width=True)
+        with col2:
+            st.write("")
+            st.write("Scarica la tua lettura e condividila dove vuoi.")
+            st.download_button(
+                "📥 Scarica la lettura", data=buf,
+                file_name="lettura_tarocchi_fantasy.png",
+                mime="image/png", use_container_width=True,
+            )
+
+        st.write("")
+        if st.button("🔄 Nuova Lettura", use_container_width=True):
+            st.session_state.pop("tarot_lettura", None)
+            st.session_state.pop("tarot_sintesi", None)
+            st.rerun()
+
+
+# ============================================================
 # MENU INIZIALE
 # ============================================================
 def render_menu():
@@ -3420,6 +3703,20 @@ def render_menu():
             st.session_state.pagina = "memory"
             st.rerun()
 
+    st.markdown(
+        textwrap.dedent("""\
+        <div class="menu-card" style="background:linear-gradient(160deg, #241a3d 0%, #120d24 100%);">
+        <div class="menu-card-icon">🃏</div>
+        <div class="menu-card-title">Tarocchi Fantasy</div>
+        <div class="menu-card-desc">Una lettura a tre carte — Passato, Presente, Futuro — con un mazzo di 16 arcani originali</div>
+        </div>
+        """),
+        unsafe_allow_html=True,
+    )
+    if st.button("Consulta le carte", key="entra_tarocchi", use_container_width=True):
+        st.session_state.pagina = "tarocchi"
+        st.rerun()
+
 
 # ============================================================
 # NAVIGAZIONE PRINCIPALE
@@ -3447,3 +3744,5 @@ elif st.session_state.pagina == "oroscopo":
     render_oroscopo()
 elif st.session_state.pagina == "memory":
     render_memory()
+elif st.session_state.pagina == "tarocchi":
+    render_tarocchi()
